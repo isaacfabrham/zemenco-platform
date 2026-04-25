@@ -1,8 +1,7 @@
 'use client';
 
 import { useTranslations, useLocale } from 'next-intl';
-import { useRouter, usePathname } from '@/navigation';
-import Link from 'next/link';
+import { useRouter, usePathname, Link } from '@/navigation';
 
 export default function Home() {
   const tNav = useTranslations('nav');

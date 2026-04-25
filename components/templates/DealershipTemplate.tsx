@@ -307,7 +307,6 @@ export default function DealershipTemplate({ data, lang: initialLang = 'en' }: {
                </p>
             </div>
           </div>
-        </div>
       </section>
 
       {/* Industrial Footer */}

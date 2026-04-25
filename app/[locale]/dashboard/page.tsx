@@ -19,7 +19,6 @@ import {
 import PortalButton from '@/components/PortalButton';
 import { useRouter } from '@/navigation';
 import { useEffect, useState } from 'react';
-import { createClient } from '@/utils/supabase/client';
 
 export default function DashboardPage() {
   const t = useTranslations('dashboard');
@@ -28,23 +27,25 @@ export default function DashboardPage() {
   const [profile, setProfile] = useState<any>(null);
   const [sites, setSites] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const supabase = createClient();
 
   useEffect(() => {
     async function loadData() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push('/login');
-        return;
+      try {
+        const res = await fetch('/api/dashboard');
+        if (res.status === 401) {
+          router.push('/login');
+          return;
+        }
+        
+        const data = await res.json();
+        setUser(data.user);
+        setProfile(data.profile);
+        setSites(data.sites);
+      } catch (e) {
+        console.error("Dashboard load failed", e);
+      } finally {
+        setLoading(false);
       }
-      setUser(user);
-
-      const { data: profile } = await supabase.from('users').select('*').eq('id', user.id).single();
-      const { data: sites } = await supabase.from('sites').select('*').eq('user_id', user.id);
-
-      setProfile(profile);
-      setSites(sites || []);
-      setLoading(false);
     }
     loadData();
   }, [router]);
