@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { MapPin, Phone, Clock, Gauge, Calendar, ShieldCheck, Filter } from 'lucide-react'
+import { MapPin, Phone, Clock, Gauge, Calendar, ShieldCheck, Filter, ChevronRight, Zap, Trophy, CreditCard } from 'lucide-react'
 
 interface Vehicle {
   make: string
@@ -34,146 +34,253 @@ export default function DealershipTemplate({ data, lang = 'en' }: { data: Dealer
   ) || []
 
   return (
-    <div className="bg-white text-[#0A0F1C] font-sans min-h-screen">
-      {/* Hero Section */}
-      <section className="relative h-[70vh] bg-black flex items-center justify-center overflow-hidden">
+    <div className="bg-[#050505] text-white font-sans min-h-screen selection:bg-[#FF4D00] selection:text-white">
+      {/* Hero Section - High Performance */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
         {data.photos?.[0] ? (
-          <img src={data.photos[0]} alt="Hero" className="absolute inset-0 w-full h-full object-cover opacity-50" />
+          <div className="absolute inset-0">
+             <img src={data.photos[0]} alt="Hero" className="absolute inset-0 w-full h-full object-cover opacity-60 scale-105" />
+             <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent" />
+          </div>
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black" />
+          <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a1a] to-black" />
         )}
-        <div className="relative z-10 text-center px-6">
-          <h1 className="text-6xl md:text-8xl font-black text-white uppercase tracking-tighter mb-4 italic">
+        
+        <div className="relative z-10 text-center px-6 max-w-6xl">
+          <div className="flex items-center justify-center gap-3 mb-8 animate-fade-in">
+             <div className="w-12 h-[2px] bg-[#FF4D00]" />
+             <span className="text-[#FF4D00] font-black tracking-[0.5em] uppercase text-[10px]">Precision Engineering</span>
+             <div className="w-12 h-[2px] bg-[#FF4D00]" />
+          </div>
+          <h1 className="text-8xl md:text-[14vw] font-black text-white uppercase italic tracking-tighter mb-6 leading-[0.8] drop-shadow-2xl">
             {data.businessName || 'Elite Motors'}
           </h1>
-          <p className="text-xl md:text-2xl text-white font-bold uppercase tracking-widest mb-10 text-[#B5780A]">
-            {data.dealershipType || 'Premium Pre-Owned Vehicles'}
+          <p className="text-xl md:text-3xl font-black uppercase tracking-[0.2em] mb-14 text-white/60 italic">
+            {data.dealershipType || 'Premium Performance Vehicles'}
           </p>
-          <div className="flex flex-col md:flex-row gap-4 justify-center">
-            <button className="px-10 py-4 bg-[#B5780A] text-white font-bold rounded uppercase hover:bg-white hover:text-black transition-all">
-              Browse Inventory
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <button className="group relative px-14 py-6 bg-[#FF4D00] text-white font-black rounded-sm uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+               Browse Inventory
+               <ChevronRight className="inline-block ml-2 group-hover:translate-x-2 transition-transform" size={18} />
             </button>
-            <button className="px-10 py-4 border-2 border-white text-white font-bold rounded uppercase hover:bg-white hover:text-black transition-all">
-              Get Financing
+            <button className="px-14 py-6 border border-white/20 text-white font-black rounded-sm uppercase tracking-widest hover:bg-white hover:text-black transition-all backdrop-blur-md">
+              Finance Options
             </button>
           </div>
         </div>
+
+        {/* Speed Stats Overlay */}
+        <div className="absolute bottom-20 left-0 right-0 px-10 flex justify-between items-end">
+           <div className="hidden md:flex gap-16">
+              <div>
+                 <p className="text-[10px] font-black text-white/30 uppercase tracking-widest mb-2">Inventory</p>
+                 <p className="text-3xl font-black italic tracking-tighter">150+ UNITS</p>
+              </div>
+              <div>
+                 <p className="text-[10px] font-black text-white/30 uppercase tracking-widest mb-2">Service</p>
+                 <p className="text-3xl font-black italic tracking-tighter">EXPERT CARE</p>
+              </div>
+           </div>
+           <div className="flex flex-col items-center gap-4 opacity-30">
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] rotate-90 origin-bottom mb-4">Launch</span>
+              <div className="w-[1px] h-20 bg-white" />
+           </div>
+        </div>
       </section>
 
-      {/* Inventory Section */}
-      <section className="py-24 px-6 max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-8">
+      {/* Trust Badges */}
+      <section className="py-20 border-y border-white/5 bg-white/5 backdrop-blur-md">
+         <div className="max-w-7xl mx-auto px-10 grid grid-cols-2 md:grid-cols-4 gap-12">
+            <div className="flex items-center gap-4 group">
+               <ShieldCheck className="text-[#FF4D00] group-hover:scale-110 transition-transform" size={32} />
+               <div>
+                  <h4 className="text-sm font-black uppercase tracking-widest">Certified</h4>
+                  <p className="text-[10px] text-white/40 uppercase font-bold">150pt Inspection</p>
+               </div>
+            </div>
+            <div className="flex items-center gap-4 group">
+               <Trophy className="text-[#FF4D00] group-hover:scale-110 transition-transform" size={32} />
+               <div>
+                  <h4 className="text-sm font-black uppercase tracking-widest">Premium</h4>
+                  <p className="text-[10px] text-white/40 uppercase font-bold">Elite Selections</p>
+               </div>
+            </div>
+            <div className="flex items-center gap-4 group">
+               <Zap className="text-[#FF4D00] group-hover:scale-110 transition-transform" size={32} />
+               <div>
+                  <h4 className="text-sm font-black uppercase tracking-widest">Fast Track</h4>
+                  <p className="text-[10px] text-white/40 uppercase font-bold">Same Day Delivery</p>
+               </div>
+            </div>
+            <div className="flex items-center gap-4 group">
+               <CreditCard className="text-[#FF4D00] group-hover:scale-110 transition-transform" size={32} />
+               <div>
+                  <h4 className="text-sm font-black uppercase tracking-widest">Finance</h4>
+                  <p className="text-[10px] text-white/40 uppercase font-bold">Flexible Rates</p>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      {/* Inventory Section - Aggressive Grid */}
+      <section className="py-40 px-6 max-w-7xl mx-auto">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-24 gap-12">
           <div>
-            <h2 className="text-4xl font-black uppercase tracking-tight italic">Our Inventory</h2>
-            <p className="text-gray-500 uppercase text-xs font-bold tracking-widest mt-2">Quality inspected vehicles</p>
+            <span className="text-[#FF4D00] font-black tracking-[0.4em] uppercase text-[10px] block mb-6">Live Inventory</span>
+            <h2 className="text-7xl font-black uppercase tracking-tighter italic leading-none">The Machine <br/> Collection</h2>
           </div>
-          <div className="relative w-full md:w-80">
-            <Filter className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+          <div className="relative w-full lg:w-[400px] group">
+            <Filter className="absolute left-6 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-[#FF4D00] transition-colors" size={20} />
             <input 
               type="text" 
-              placeholder="Search by Make or Model..." 
+              placeholder="Filter by Make, Model, or Year..." 
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 bg-gray-100 border-none rounded-lg focus:ring-2 focus:ring-[#B5780A] outline-none"
+              className="w-full pl-16 pr-6 py-6 bg-white/5 border border-white/10 rounded-sm font-black uppercase text-xs tracking-widest focus:border-[#FF4D00] outline-none transition-all placeholder:text-white/20"
             />
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {filteredInventory.length > 0 ? filteredInventory.map((v, i) => (
-            <div key={i} className="group bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all">
-              <div className="aspect-video bg-gray-200 relative overflow-hidden">
+            <div key={i} className="group relative bg-[#0F0F0F] border border-white/5 overflow-hidden transition-all hover:border-[#FF4D00]/50 shadow-2xl">
+              <div className="aspect-[16/10] bg-[#1a1a1a] relative overflow-hidden">
                 {v.photo ? (
-                   <img src={v.photo} alt={v.model} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                   <img src={v.photo} alt={v.model} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-gray-400 font-bold uppercase text-xs">Vehicle Photo</div>
+                  <div className="w-full h-full flex items-center justify-center text-white/10 font-black uppercase text-[10px] tracking-widest">Visual Data Unavailable</div>
                 )}
-                <div className="absolute top-4 right-4 bg-black text-white px-3 py-1 text-sm font-black italic rounded">
-                  {v.year}
+                <div className="absolute top-6 left-6 flex flex-col gap-2">
+                   <span className="bg-[#FF4D00] text-white px-3 py-1 text-[10px] font-black uppercase italic tracking-widest self-start">
+                     {v.year}
+                   </span>
+                </div>
+                {/* Spec Overlay */}
+                <div className="absolute bottom-4 left-4 right-4 flex gap-2 translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                   <div className="flex-1 bg-black/80 backdrop-blur-md p-3 rounded-sm border border-white/10 text-center">
+                      <p className="text-[8px] text-white/40 uppercase font-black tracking-widest mb-1">Mileage</p>
+                      <p className="text-xs font-black italic">{v.mileage}mi</p>
+                   </div>
+                   <div className="flex-1 bg-black/80 backdrop-blur-md p-3 rounded-sm border border-white/10 text-center">
+                      <p className="text-[8px] text-white/40 uppercase font-black tracking-widest mb-1">Status</p>
+                      <p className="text-xs font-black italic text-[#FF4D00]">CERTIFIED</p>
+                   </div>
                 </div>
               </div>
-              <div className="p-6">
-                <h3 className="text-2xl font-black uppercase mb-1 tracking-tight">{v.make} {v.model}</h3>
-                <div className="flex items-center gap-4 text-gray-500 text-sm mb-6 font-bold uppercase tracking-tighter">
-                  <span className="flex items-center gap-1"><Gauge size={14} /> {v.mileage} miles</span>
-                  <span className="flex items-center gap-1"><ShieldCheck size={14} /> Certified</span>
+              <div className="p-10">
+                <h3 className="text-3xl font-black uppercase mb-2 tracking-tighter italic group-hover:text-[#FF4D00] transition-colors">{v.make} {v.model}</h3>
+                <div className="flex items-center gap-6 text-white/40 text-[10px] mb-8 font-black uppercase tracking-[0.2em]">
+                  <span className="flex items-center gap-2"><Gauge size={14} className="text-[#FF4D00]" /> Performance Grade A+</span>
                 </div>
-                <div className="flex justify-between items-center border-t border-gray-100 pt-6">
-                  <span className="text-3xl font-black text-[#B5780A]">${v.price}</span>
-                  <button className="px-5 py-2.5 bg-black text-white text-xs font-bold uppercase rounded hover:bg-[#B5780A] transition-colors">
-                    Inquire
+                <div className="flex justify-between items-center border-t border-white/5 pt-8">
+                  <div>
+                     <p className="text-[10px] font-black text-white/30 uppercase tracking-widest mb-1">Reserved Value</p>
+                     <span className="text-4xl font-black tracking-tighter italic text-white">${v.price}</span>
+                  </div>
+                  <button className="w-14 h-14 bg-white/5 rounded-full flex items-center justify-center group-hover:bg-[#FF4D00] transition-all group-hover:scale-110">
+                    <ChevronRight size={24} />
                   </button>
                 </div>
               </div>
             </div>
           )) : (
-            <p className="col-span-full text-center py-20 text-gray-400 italic">No vehicles found matching your search.</p>
+            <div className="col-span-full py-32 text-center border border-white/5 rounded-xl bg-white/5 backdrop-blur-sm">
+               <p className="text-white/20 font-black uppercase tracking-[0.5em] text-xs">Awaiting Inventory Transmission...</p>
+            </div>
           )}
         </div>
       </section>
 
-      {/* Financing & Booking Forms */}
-      <section className="py-24 bg-gray-900 text-white px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20">
+      {/* Inquiry & Concierge - Tactical Design */}
+      <section className="py-40 bg-[#0A0A0A] border-y border-white/5">
+        <div className="max-w-7xl mx-auto px-10 grid grid-cols-1 lg:grid-cols-2 gap-32">
           <div>
-            <h2 className="text-4xl font-black uppercase tracking-tight italic mb-8 text-[#B5780A]">Quick Inquiry</h2>
-            <p className="text-gray-400 mb-12 leading-relaxed max-w-md">
-              Interested in a vehicle or need financing? Fill out the form and our team will get back to you within 24 hours.
+            <span className="text-[#FF4D00] font-black tracking-[0.4em] uppercase text-[10px] block mb-6">Direct Channel</span>
+            <h2 className="text-6xl font-black uppercase tracking-tighter italic mb-10 leading-tight">Secure Your <br/> Machine</h2>
+            <p className="text-white/40 mb-16 leading-relaxed max-w-md text-lg italic font-light">
+              Our specialists are ready to finalize your acquisition. Every vehicle in our fleet represents the pinnacle of its class.
             </p>
-            <div className="space-y-6">
-              <input type="text" placeholder="Full Name" className="w-full p-4 bg-white/5 border border-white/10 rounded focus:border-[#B5780A] outline-none" />
-              <input type="email" placeholder="Email Address" className="w-full p-4 bg-white/5 border border-white/10 rounded focus:border-[#B5780A] outline-none" />
-              <select className="w-full p-4 bg-white/5 border border-white/10 rounded focus:border-[#B5780A] outline-none text-gray-400">
-                <option>Interested In...</option>
-                <option>Financing Options</option>
-                <option>Test Drive Booking</option>
-                <option>General Inquiry</option>
+            <div className="space-y-4">
+              <input type="text" placeholder="Full Identification" className="w-full p-6 bg-white/5 border border-white/10 rounded-sm font-black uppercase text-[10px] tracking-widest focus:border-[#FF4D00] outline-none transition-all" />
+              <div className="grid grid-cols-2 gap-4">
+                 <input type="email" placeholder="Communication Port (Email)" className="p-6 bg-white/5 border border-white/10 rounded-sm font-black uppercase text-[10px] tracking-widest focus:border-[#FF4D00] outline-none transition-all" />
+                 <input type="text" placeholder="Phone Link" className="p-6 bg-white/5 border border-white/10 rounded-sm font-black uppercase text-[10px] tracking-widest focus:border-[#FF4D00] outline-none transition-all" />
+              </div>
+              <select className="w-full p-6 bg-white/5 border border-white/10 rounded-sm font-black uppercase text-[10px] tracking-widest focus:border-[#FF4D00] outline-none transition-all text-white/30">
+                <option>Select Mission Profile</option>
+                <option>Performance Financing</option>
+                <option>Fleet Acquisition</option>
+                <option>Technical Inquiry</option>
               </select>
-              <button className="w-full py-5 bg-[#B5780A] text-white font-bold uppercase tracking-widest rounded hover:bg-white hover:text-black transition-all">
-                Submit Request
+              <button className="w-full py-8 bg-[#FF4D00] text-white font-black uppercase tracking-[0.3em] rounded-sm hover:bg-white hover:text-black transition-all shadow-2xl">
+                Initialize Transmission
               </button>
             </div>
           </div>
-          <div className="space-y-12">
-            <h2 className="text-4xl font-black uppercase tracking-tight italic mb-8">Visit Showroom</h2>
-            <div className="grid grid-cols-1 gap-10">
-              <div className="flex gap-6">
-                <MapPin className="text-[#B5780A]" size={24} />
-                <div>
-                  <p className="font-bold uppercase text-xs tracking-widest mb-2">Location</p>
-                  <p className="text-gray-400">{data.address}, {data.city}</p>
-                </div>
-              </div>
-              <div className="flex gap-6">
-                <Clock className="text-[#B5780A]" size={24} />
-                <div>
-                  <p className="font-bold uppercase text-xs tracking-widest mb-2">Hours</p>
-                  <p className="text-gray-400 whitespace-pre-line">{data.hours || 'Mon-Sat: 9am - 8pm\nSun: 11am - 5pm'}</p>
-                </div>
-              </div>
-              <div className="flex gap-6">
-                <Phone className="text-[#B5780A]" size={24} />
-                <div>
-                  <p className="font-bold uppercase text-xs tracking-widest mb-2">Call Us</p>
-                  <p className="text-gray-400">{data.phone}</p>
-                </div>
-              </div>
+          
+          <div className="flex flex-col justify-between">
+            <div className="space-y-16">
+               <h2 className="text-6xl font-black uppercase tracking-tighter italic leading-tight">Tactical Hub</h2>
+               <div className="grid grid-cols-1 gap-12">
+                  <div className="flex gap-8 group">
+                     <div className="w-16 h-16 bg-white/5 flex items-center justify-center text-[#FF4D00] border border-white/10 transition-all group-hover:bg-[#FF4D00] group-hover:text-white">
+                        <MapPin size={24} />
+                     </div>
+                     <div>
+                        <p className="font-black uppercase text-[10px] tracking-widest text-white/30 mb-2">Operational Base</p>
+                        <p className="text-2xl font-black italic tracking-tight">{data.address}, {data.city}</p>
+                     </div>
+                  </div>
+                  <div className="flex gap-8 group">
+                     <div className="w-16 h-16 bg-white/5 flex items-center justify-center text-[#FF4D00] border border-white/10 transition-all group-hover:bg-[#FF4D00] group-hover:text-white">
+                        <Clock size={24} />
+                     </div>
+                     <div>
+                        <p className="font-black uppercase text-[10px] tracking-widest text-white/30 mb-2">Window of Operation</p>
+                        <p className="text-2xl font-black italic tracking-tight whitespace-pre-line">{data.hours || 'MON — SAT: 08:00 - 20:00'}</p>
+                     </div>
+                  </div>
+                  <div className="flex gap-8 group">
+                     <div className="w-16 h-16 bg-white/5 flex items-center justify-center text-[#FF4D00] border border-white/10 transition-all group-hover:bg-[#FF4D00] group-hover:text-white">
+                        <Phone size={24} />
+                     </div>
+                     <div>
+                        <p className="font-black uppercase text-[10px] tracking-widest text-white/30 mb-2">Encrypted Comms</p>
+                        <p className="text-2xl font-black italic tracking-tight underline underline-offset-8 decoration-[#FF4D00]">{data.phone}</p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div className="mt-20 p-8 border border-white/5 bg-white/5 rounded-xl">
+               <div className="flex items-center gap-4 mb-4">
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
+                  <span className="text-[10px] font-black uppercase tracking-widest">Systems Online</span>
+               </div>
+               <p className="text-[10px] text-white/30 uppercase leading-loose font-bold tracking-widest">
+                  Real-time stock monitoring active. Financing algorithms updated for current market performance.
+               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-black text-white py-20 px-6 border-t border-white/5">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
-          <h3 className="text-3xl font-black italic tracking-tighter uppercase">{data.businessName}</h3>
-          <p className="text-xs text-gray-600 uppercase tracking-widest">
-            © {new Date().getFullYear()} {data.businessName} • Digital Architecture by Zemen Co.
-          </p>
-          <div className="flex gap-6 text-gray-400">
+      {/* Industrial Footer */}
+      <footer className="bg-black text-white py-32 px-10 border-t border-white/5">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-20">
+          <div className="text-center md:text-left">
+             <h3 className="text-5xl font-black italic tracking-tighter uppercase mb-4">{data.businessName}</h3>
+             <p className="text-[10px] font-black text-white/20 uppercase tracking-[0.5em]">High Performance Automotive Group</p>
+          </div>
+          <div className="flex gap-4">
              {data.languages?.map(l => (
-              <span key={l} className="text-[10px] font-bold uppercase border border-white/20 px-2 py-1 rounded">{l}</span>
+              <span key={l} className="text-[10px] font-black uppercase border border-white/10 px-4 py-2 hover:border-[#FF4D00] transition-colors cursor-default">{l}</span>
             ))}
+          </div>
+          <div className="text-center md:text-right">
+             <p className="text-[10px] font-black text-white/10 uppercase tracking-[0.4em] mb-4">Transmission End</p>
+             <p className="text-[10px] text-white/40 uppercase font-black tracking-widest">
+               © {new Date().getFullYear()} {data.businessName} • Built by Zemen Co. Tactical Digital
+             </p>
           </div>
         </div>
       </footer>

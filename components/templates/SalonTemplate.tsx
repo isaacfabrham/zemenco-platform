@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { MapPin, Phone, Clock, Calendar, Instagram } from 'lucide-react'
+import { MapPin, Phone, Clock, Calendar, Instagram, ArrowRight, Star } from 'lucide-react'
 
 interface SalonData {
   businessName: string
@@ -19,121 +19,178 @@ interface SalonData {
 
 export default function SalonTemplate({ data, lang = 'en' }: { data: SalonData, lang?: string }) {
   return (
-    <div className="bg-[#FAF9F6] text-[#1A1A1A] font-sans min-h-screen">
-      {/* Hero Section */}
-      <section className="relative h-[85vh] flex items-center px-10 md:px-24 overflow-hidden bg-[#1A1A1A]">
-        <div className="absolute right-0 top-0 w-full md:w-1/2 h-full opacity-60 md:opacity-100">
+    <div className="bg-[#FAF9F6] text-[#1A1A1A] font-sans min-h-screen selection:bg-[#B5780A] selection:text-white">
+      {/* Dynamic Header Overlay */}
+      <div className="absolute top-0 w-full h-[120px] bg-gradient-to-b from-[#1A1A1A]/20 to-transparent z-20 pointer-events-none" />
+
+      {/* Hero Section - High Fashion Minimalist */}
+      <section className="relative h-screen flex items-center overflow-hidden bg-[#0F0F0F]">
+        <div className="absolute inset-0 z-0">
           {data.photos?.[0] ? (
-            <img src={data.photos[0]} alt="Hero" className="w-full h-full object-cover" />
+            <img src={data.photos[0]} alt="Hero" className="w-full h-full object-cover opacity-70 scale-105" />
           ) : (
-            <div className="w-full h-full bg-[#333]" />
+            <div className="w-full h-full bg-[#1a1a1a]" />
           )}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0F0F0F] via-[#0F0F0F]/40 to-transparent" />
         </div>
         
-        <div className="relative z-10 max-w-2xl text-white">
-          <span className="text-[#B5780A] font-bold tracking-[0.3em] uppercase text-xs block mb-6">Established Style</span>
-          <h1 className="text-7xl md:text-8xl font-light uppercase tracking-tighter mb-8 leading-[0.9]">
-            {data.businessName || 'Elite Salon'}
-          </h1>
-          <p className="text-lg md:text-xl text-white/70 font-light mb-12 max-w-md">
-            Mastering the art of {data.specialty || 'natural hair and beauty'} in {data.city || 'your city'}.
-          </p>
-          <button className="px-12 py-5 bg-white text-[#1A1A1A] font-bold rounded-full uppercase text-xs tracking-widest hover:bg-[#B5780A] hover:text-white transition-all">
-            Book Appointment
-          </button>
-        </div>
-      </section>
-
-      {/* Services Section */}
-      <section className="py-32 px-6 max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
-          <div className="max-w-md">
-            <h2 className="text-5xl font-light uppercase tracking-tight mb-4">Services</h2>
-            <p className="text-gray-500 italic">Curated treatments designed for your unique style.</p>
-          </div>
-          <div className="h-px flex-1 bg-gray-200 mb-4 hidden md:block" />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-24 gap-y-8">
-          {data.services?.length > 0 ? data.services.map((item, i) => (
-            <div key={i} className="flex justify-between items-baseline group cursor-default">
-              <span className="text-lg uppercase tracking-tight group-hover:text-[#B5780A] transition-colors">{item.name}</span>
-              <div className="flex-1 border-b border-dotted border-gray-300 mx-4 mb-1" />
-              <span className="text-lg font-bold">from ${item.price}</span>
+        <div className="relative z-10 container mx-auto px-10 md:px-24">
+          <div className="max-w-3xl">
+            <div className="flex items-center gap-3 mb-8 animate-fade-in">
+               <div className="w-8 h-px bg-[#B5780A]" />
+               <span className="text-[#B5780A] font-black tracking-[0.4em] uppercase text-[10px]">The Art of Beauty</span>
             </div>
-          )) : (
-            <p className="col-span-2 text-center text-gray-400 italic">No services listed yet.</p>
-          )}
-        </div>
-      </section>
-
-      {/* Stylists Section */}
-      <section className="py-32 bg-white px-6">
-        <div className="max-w-6xl mx-auto text-center mb-20">
-          <h2 className="text-5xl font-light uppercase tracking-tight mb-4">Meet the Team</h2>
-          <p className="text-gray-500">The masters behind the magic.</p>
-        </div>
-        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
-          {data.stylists?.length > 0 ? data.stylists.map((s, i) => (
-            <div key={i} className="text-center group">
-              <div className="aspect-[3/4] bg-gray-100 rounded-2xl mb-6 overflow-hidden">
-                <div className="w-full h-full flex items-center justify-center text-gray-300 uppercase font-bold text-xs">Stylist Image</div>
-              </div>
-              <h3 className="text-xl font-bold uppercase mb-1">{s.name}</h3>
-              <p className="text-xs text-[#B5780A] font-bold uppercase tracking-widest">{s.specialty}</p>
-            </div>
-          )) : (
-            <p className="col-span-4 text-center text-gray-400 italic">Add your stylists to show off your team.</p>
-          )}
-        </div>
-      </section>
-
-      {/* Info Section */}
-      <section className="py-32 px-6 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-24">
-        <div className="space-y-12">
-          <h2 className="text-5xl font-light uppercase tracking-tight">Location & Hours</h2>
-          <div className="grid grid-cols-1 gap-10">
-            <div className="flex gap-6">
-              <MapPin className="text-[#B5780A]" size={24} />
-              <div>
-                <p className="font-bold uppercase text-xs tracking-widest mb-2">Find Us</p>
-                <p className="text-gray-600 leading-relaxed">{data.address}, {data.city}</p>
-              </div>
-            </div>
-            <div className="flex gap-6">
-              <Clock className="text-[#B5780A]" size={24} />
-              <div>
-                <p className="font-bold uppercase text-xs tracking-widest mb-2">Our Hours</p>
-                <p className="text-gray-600 leading-relaxed whitespace-pre-line">{data.hours || 'Tue-Sat: 9am - 7pm\nSun-Mon: Closed'}</p>
-              </div>
-            </div>
-            <div className="flex gap-6">
-              <Calendar className="text-[#B5780A]" size={24} />
-              <div>
-                <p className="font-bold uppercase text-xs tracking-widest mb-2">Booking</p>
-                <p className="text-gray-600 leading-relaxed">Preferred: {data.bookingMethod || 'Online Booking'}</p>
-              </div>
+            <h1 className="text-8xl md:text-[12vw] font-light uppercase tracking-tighter mb-10 leading-[0.8] text-white">
+              {data.businessName || 'Elite Salon'}
+            </h1>
+            <p className="text-xl md:text-2xl text-white/60 font-light mb-16 max-w-md leading-relaxed">
+              Elevating the standard of {data.specialty || 'natural hair and beauty'} in the heart of {data.city || 'your city'}.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-6">
+              <button className="px-12 py-5 bg-white text-[#1A1A1A] font-black rounded-full uppercase text-[10px] tracking-[0.3em] hover:bg-[#B5780A] hover:text-white transition-all shadow-xl">
+                Book Consultation
+              </button>
+              <button className="px-12 py-5 border border-white/20 text-white font-black rounded-full uppercase text-[10px] tracking-[0.3em] hover:bg-white/10 transition-all backdrop-blur-sm">
+                Explore Services
+              </button>
             </div>
           </div>
         </div>
-        <div className="aspect-square bg-gray-200 rounded-[60px] overflow-hidden grayscale">
-           <div className="w-full h-full flex items-center justify-center text-gray-400 font-bold uppercase tracking-widest text-sm">
-            Map
+        
+        {/* Vertical Branding */}
+        <div className="absolute right-10 bottom-24 hidden lg:block">
+           <p className="rotate-90 origin-right text-white/20 font-black uppercase tracking-[1em] text-[10px]">Excellence • Artistry • Luxury</p>
+        </div>
+      </section>
+
+      {/* Services Section - Boutique Gallery */}
+      <section className="py-40 px-10 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 items-start">
+          <div className="lg:col-span-4 sticky top-40">
+            <span className="text-[#B5780A] font-black tracking-[0.4em] uppercase text-[10px] block mb-6">Our Craft</span>
+            <h2 className="text-6xl font-light uppercase tracking-tighter mb-8 leading-tight">Tailored <br/>Treatments</h2>
+            <p className="text-gray-400 text-lg leading-relaxed italic mb-12">
+              Every appointment is a bespoke journey. We combine heritage techniques with modern science to reveal your most radiant self.
+            </p>
+            <div className="p-8 bg-white border border-gray-100 rounded-3xl shadow-soft">
+               <div className="flex items-center gap-4 mb-4">
+                  <Star className="text-[#B5780A] fill-[#B5780A]" size={16} />
+                  <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Client Favorite</span>
+               </div>
+               <h4 className="text-xl font-bold uppercase mb-2">Signature Revive</h4>
+               <p className="text-gray-400 text-xs mb-6 uppercase tracking-widest">Full Treatment • 120 Mins</p>
+               <button className="w-full py-4 border border-gray-100 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#1A1A1A] hover:text-white transition-all">Book Now</button>
+            </div>
+          </div>
+
+          <div className="lg:col-span-8 space-y-12">
+            {data.services?.length > 0 ? data.services.map((item, i) => (
+              <div key={i} className="group flex justify-between items-center py-10 border-b border-gray-100 hover:border-[#B5780A] transition-all cursor-pointer">
+                <div className="flex-1">
+                  <span className="text-[#B5780A] text-[10px] font-black uppercase tracking-[0.2em] mb-2 block opacity-0 group-hover:opacity-100 transition-opacity">Premium Service</span>
+                  <h3 className="text-3xl font-light uppercase tracking-tight group-hover:pl-4 transition-all duration-500">{item.name}</h3>
+                </div>
+                <div className="flex items-center gap-8">
+                   <span className="text-2xl font-bold tracking-tighter">From ${item.price}</span>
+                   <div className="w-12 h-12 rounded-full border border-gray-100 flex items-center justify-center group-hover:bg-[#1A1A1A] group-hover:text-white transition-all">
+                      <ArrowRight size={18} />
+                   </div>
+                </div>
+              </div>
+            )) : (
+              <div className="py-20 text-center border-2 border-dashed border-gray-100 rounded-[40px]">
+                 <p className="text-gray-300 uppercase font-black text-xs tracking-widest">Compiling Boutique Selections...</p>
+              </div>
+            )}
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-gray-200 py-20 px-6 text-center">
-        <div className="max-w-xl mx-auto">
-          <h3 className="text-2xl font-light uppercase tracking-[0.2em] mb-8">{data.businessName}</h3>
-          <div className="flex justify-center gap-8 mb-12">
-            <Instagram size={20} className="hover:text-[#B5780A] cursor-pointer" />
-            <Phone size={20} className="hover:text-[#B5780A] cursor-pointer" />
+      {/* Team Section - Editorial Layout */}
+      <section className="py-40 bg-white">
+        <div className="max-w-7xl mx-auto px-10">
+          <div className="text-center mb-24">
+            <h2 className="text-7xl font-light uppercase tracking-tighter mb-6">The Collective</h2>
+            <p className="text-[#B5780A] font-black uppercase tracking-[0.5em] text-[10px]">Master Artisans of Beauty</p>
           </div>
-          <p className="text-[10px] text-gray-400 uppercase tracking-widest leading-loose">
-            © {new Date().getFullYear()} {data.businessName} • Digital Excellence by Zemen Co.
-          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
+            {data.stylists?.length > 0 ? data.stylists.map((s, i) => (
+              <div key={i} className="group text-center">
+                <div className="relative aspect-[4/5] bg-gray-50 rounded-[60px] mb-8 overflow-hidden transition-all duration-700 group-hover:rounded-[20px] shadow-soft">
+                  <div className="absolute inset-0 flex items-center justify-center text-gray-200 uppercase font-black text-[10px] tracking-widest">Editorial Image</div>
+                  {/* Image Placeholder */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                </div>
+                <h3 className="text-2xl font-light uppercase tracking-tight mb-2">{s.name}</h3>
+                <p className="text-[10px] text-[#B5780A] font-black uppercase tracking-[0.3em]">{s.specialty}</p>
+              </div>
+            )) : (
+              <p className="col-span-4 text-center text-gray-300 italic uppercase text-[10px] font-black tracking-widest">Our masters are being curated...</p>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Concierge & Map */}
+      <section className="py-40 px-10 max-w-7xl mx-auto">
+         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
+            <div className="bg-[#1A1A1A] p-16 rounded-[60px] text-white flex flex-col justify-between">
+               <div>
+                  <h2 className="text-5xl font-light uppercase tracking-tighter mb-12">Concierge</h2>
+                  <div className="space-y-10">
+                     <div className="flex gap-8">
+                        <MapPin className="text-[#B5780A]" size={24} />
+                        <div>
+                           <p className="text-[10px] font-black uppercase tracking-widest text-white/30 mb-2">Location</p>
+                           <p className="text-xl font-light">{data.address}, {data.city}</p>
+                        </div>
+                     </div>
+                     <div className="flex gap-8">
+                        <Clock className="text-[#B5780A]" size={24} />
+                        <div>
+                           <p className="text-[10px] font-black uppercase tracking-widest text-white/30 mb-2">Availability</p>
+                           <p className="text-xl font-light leading-relaxed">{data.hours || 'Tue — Sat: 10:00 - 19:00'}</p>
+                        </div>
+                     </div>
+                     <div className="flex gap-8">
+                        <Phone className="text-[#B5780A]" size={24} />
+                        <div>
+                           <p className="text-[10px] font-black uppercase tracking-widest text-white/30 mb-2">Direct Line</p>
+                           <p className="text-xl font-light underline underline-offset-8 decoration-[#B5780A]">{data.phone}</p>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <button className="mt-20 w-full py-6 bg-white text-[#1A1A1A] font-black rounded-full uppercase text-[10px] tracking-[0.4em] hover:bg-[#B5780A] hover:text-white transition-all">
+                  Request Reservation
+               </button>
+            </div>
+            <div className="relative aspect-square lg:aspect-auto h-full min-h-[500px] bg-white rounded-[60px] overflow-hidden border border-gray-100 shadow-hover">
+               <div className="absolute inset-0 bg-cover bg-center grayscale opacity-20" style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80")' }} />
+               <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-16 h-16 bg-[#B5780A] rounded-full flex items-center justify-center shadow-2xl animate-pulse">
+                     <MapPin className="text-white" size={28} />
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      {/* Elite Footer */}
+      <footer className="py-40 px-10 border-t border-gray-100 bg-white">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-16">
+          <div className="text-center md:text-left">
+            <h3 className="text-4xl font-light uppercase tracking-[0.2em] mb-4">{data.businessName}</h3>
+            <p className="text-[10px] font-black uppercase tracking-[0.5em] text-gray-300">Boutique Hair & Beauty Collective</p>
+          </div>
+          <div className="flex gap-12">
+            <button className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center hover:bg-[#B5780A] hover:text-white transition-all"><Instagram size={18} /></button>
+            <button className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center hover:bg-[#B5780A] hover:text-white transition-all"><Calendar size={18} /></button>
+          </div>
+          <div className="text-center md:text-right">
+             <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Legal</p>
+             <p className="text-[10px] text-gray-300 uppercase tracking-widest">© {new Date().getFullYear()} {data.businessName} • Digital by Zemen Co.</p>
+          </div>
         </div>
       </footer>
     </div>
