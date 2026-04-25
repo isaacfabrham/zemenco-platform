@@ -17,9 +17,30 @@ interface SalonData {
   languages: string[]
 }
 
-export default function SalonTemplate({ data, lang = 'en' }: { data: SalonData, lang?: string }) {
+export default function SalonTemplate({ data, lang: initialLang = 'en' }: { data: SalonData, lang?: string }) {
+  const [lang, setLang] = React.useState(initialLang)
+  const dir = lang === 'ar' ? 'rtl' : 'ltr'
+
   return (
-    <div className="bg-[#FAF9F6] text-[#1A1A1A] font-sans min-h-screen selection:bg-[#B5780A] selection:text-white">
+    <div className="bg-[#FAF9F6] text-[#1A1A1A] font-sans min-h-screen selection:bg-[#B5780A] selection:text-white" dir={dir}>
+      {/* Premium Language Toggle */}
+      {data.languages?.length > 1 && (
+        <div className="fixed top-24 right-6 z-[100] flex gap-1 bg-white/5 backdrop-blur-xl p-1.5 rounded-full shadow-2xl border border-white/10">
+          {data.languages.map(l => (
+            <button 
+              key={l}
+              onClick={() => setLang(l.toLowerCase().includes('amharic') ? 'am' : l.toLowerCase().includes('tigrinya') ? 'ti' : l.toLowerCase().includes('arabic') ? 'ar' : 'en')}
+              className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
+                (lang === 'am' && l.includes('Amharic')) || (lang === 'ti' && l.includes('Tigrinya')) || (lang === 'ar' && l.includes('Arabic')) || (lang === 'en' && l.includes('English'))
+                ? 'bg-[#B5780A] text-white shadow-lg' : 'text-gray-400 hover:text-[#1A1A1A]'
+              }`}
+            >
+              {l.includes('Amharic') ? 'አማ' : l.includes('Tigrinya') ? 'ትግ' : l.includes('Arabic') ? 'عرب' : 'EN'}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Dynamic Header Overlay */}
       <div className="absolute top-0 w-full h-[120px] bg-gradient-to-b from-[#1A1A1A]/20 to-transparent z-20 pointer-events-none" />
 
@@ -166,12 +187,27 @@ export default function SalonTemplate({ data, lang = 'en' }: { data: SalonData, 
                </button>
             </div>
             <div className="relative aspect-square lg:aspect-auto h-full min-h-[500px] bg-white rounded-[60px] overflow-hidden border border-gray-100 shadow-hover">
-               <div className="absolute inset-0 bg-cover bg-center grayscale opacity-20" style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80")' }} />
-               <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-16 h-16 bg-[#B5780A] rounded-full flex items-center justify-center shadow-2xl animate-pulse">
-                     <MapPin className="text-white" size={28} />
+               <iframe 
+                width="100%" 
+                height="100%" 
+                frameBorder="0" 
+                style={{ border: 0, filter: 'grayscale(1) contrast(1.1) brightness(1.1)' }} 
+                src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}&q=${encodeURIComponent(`${data.address}, ${data.city}`)}`} 
+                allowFullScreen
+              />
+              {/* Fallback if no key */}
+              {!process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY && (
+                <div className="absolute inset-0 bg-white/90 backdrop-blur-sm flex items-center justify-center p-12 text-center">
+                  <div>
+                    <div className="w-16 h-16 bg-[#B5780A] rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
+                      <MapPin size={32} className="text-white" />
+                    </div>
+                    <h4 className="text-2xl font-light uppercase tracking-tighter mb-2">{data.businessName}</h4>
+                    <p className="text-gray-400 uppercase text-[10px] font-black tracking-widest">{data.address}, {data.city}</p>
+                    <div className="mt-8 px-8 py-3 bg-[#1A1A1A] text-white text-[10px] font-black uppercase tracking-widest rounded-full">Interactive Map in Production</div>
                   </div>
-               </div>
+                </div>
+              )}
             </div>
          </div>
       </section>

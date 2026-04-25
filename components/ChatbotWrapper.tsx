@@ -6,8 +6,10 @@ import Chatbot from './Chatbot'
 export default function ChatbotWrapper() {
   const pathname = usePathname()
   
-  // Hide the chatbot on the builder route
-  if (pathname?.startsWith('/build')) {
+  // Hide the chatbot on the builder route (e.g., /en/build, /ar/build)
+  const isBuilder = pathname?.split('/').some(segment => segment === 'build')
+  
+  if (isBuilder) {
     return null
   }
 

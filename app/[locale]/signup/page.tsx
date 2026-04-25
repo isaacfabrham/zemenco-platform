@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useRouter, Link } from '@/navigation';
+import { useTranslations } from 'next-intl';
 
 export default function SignupPage() {
+  const t = useTranslations('auth.signup');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -24,14 +25,14 @@ export default function SignupPage() {
       const res = await fetch('/api/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, action: 'signup' }),
+        body: JSON.stringify({ email, password, action: 'signup', plan }),
       });
 
       const data = await res.json();
       if (data.error) throw new Error(data.error);
 
       setSuccess(true);
-      setMessage(`Account created! Please check ${email} to verify your account and continue to checkout.`);
+      setMessage(t('success', { email }));
     } catch (err: any) {
       setMessage(err.message);
     } finally {
@@ -41,22 +42,22 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-bg-surface text-text-main p-4">
-      <div className="w-full max-w-md bg-white p-8 border border-border-color rounded shadow-soft">
+      <div className="w-full max-w-md bg-white p-8 border border-border-color rounded shadow-soft reveal active">
         <div className="text-center mb-8">
-          <Link href="/" className="font-extrabold text-2xl tracking-tighter">ZEMEN CO.</Link>
-          <h1 className="text-3xl font-bold mt-6 mb-2">Create your account</h1>
-          <p className="text-text-muted">Start building your custom platform</p>
+          <Link href="/" className="font-extrabold text-2xl tracking-tighter reveal active delay-100">ZEMEN CO.</Link>
+          <h1 className="text-3xl font-bold mt-6 mb-2 reveal active delay-200">{t('title')}</h1>
+          <p className="text-text-muted reveal active delay-300">{t('subtitle')}</p>
         </div>
 
         {message && (
-          <div className="mb-6 p-4 bg-brand-green/10 text-brand-green rounded text-sm font-medium">
+          <div className={`mb-6 p-4 rounded text-sm font-medium reveal active ${success ? 'bg-brand-green/10 text-brand-green' : 'bg-brand-red/10 text-brand-red'}`}>
             {message}
           </div>
         )}
 
         <form onSubmit={handleSignup} className="space-y-6">
-          <div>
-            <label className="block text-sm font-semibold uppercase tracking-widest mb-2">Email</label>
+          <div className="reveal active delay-300">
+            <label className="block text-sm font-semibold uppercase tracking-widest mb-2">{t('login.email')}</label>
             <input 
               type="email" 
               value={email}
@@ -65,8 +66,8 @@ export default function SignupPage() {
               required 
             />
           </div>
-          <div>
-            <label className="block text-sm font-semibold uppercase tracking-widest mb-2">Password</label>
+          <div className="reveal active delay-400">
+            <label className="block text-sm font-semibold uppercase tracking-widest mb-2">{t('login.password')}</label>
             <input 
               type="password" 
               value={password}
@@ -78,14 +79,14 @@ export default function SignupPage() {
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full py-4 bg-text-main text-white font-bold uppercase rounded hover:bg-brand-gold transition-colors disabled:opacity-50"
+            className="w-full py-4 bg-text-main text-white font-bold uppercase rounded hover:bg-brand-gold transition-colors disabled:opacity-50 reveal active delay-500"
           >
-            {loading ? 'Creating...' : 'Sign Up'}
+            {loading ? t('creating') : t('button')}
           </button>
         </form>
 
-        <p className="mt-6 text-center text-text-muted">
-          Already have an account? <Link href="/login" className="text-brand-gold hover:underline">Log in</Link>
+        <p className="mt-6 text-center text-text-muted reveal active delay-600">
+          {t('haveAccount')} <Link href="/login" className="text-brand-gold hover:underline">{t('login')}</Link>
         </p>
       </div>
     </div>

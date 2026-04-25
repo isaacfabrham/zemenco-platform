@@ -23,24 +23,27 @@ export default function RestaurantTemplate({ data, lang: initialLang = 'en' }: {
   const t = {
     en: { reserve: 'Book a Table', menu: 'Signature Menu', visit: 'Find Us', story: 'Our Story' },
     am: { reserve: 'ጠረጴዛ ያስይዙ', menu: 'የምግብ ዝርዝር', visit: 'ይምጡ ይጎብኙን', story: 'ታሪካችን' },
-    ti: { reserve: 'ቦታ ትሓዙ', menu: 'ዝርዝር መግቢ', visit: 'በጽሑና', story: 'ታሪኽና' }
+    ti: { reserve: 'ቦታ ትሓዙ', menu: 'ዝርዝር መግቢ', visit: 'በጽሑና', story: 'ታሪኽና' },
+    ar: { reserve: 'احجز طاولة', menu: 'قائمة الطعام', visit: 'زورونا', story: 'قصتنا' }
   }[lang as keyof typeof t] || t.en
 
+  const dir = lang === 'ar' ? 'rtl' : 'ltr'
+
   return (
-    <div className="bg-[#0A0F1C] text-white font-sans min-h-screen selection:bg-[#B5780A] selection:text-white">
+    <div className="bg-[#0A0F1C] text-white font-sans min-h-screen selection:bg-[#B5780A] selection:text-white" dir={dir}>
       {/* Premium Language Toggle */}
       {data.languages?.length > 1 && (
         <div className="fixed top-24 right-6 z-[100] flex gap-1 bg-white/5 backdrop-blur-xl p-1.5 rounded-full shadow-2xl border border-white/10">
           {data.languages.map(l => (
             <button 
               key={l}
-              onClick={() => setLang(l.toLowerCase().includes('amharic') ? 'am' : l.toLowerCase().includes('tigrinya') ? 'ti' : 'en')}
+              onClick={() => setLang(l.toLowerCase().includes('amharic') ? 'am' : l.toLowerCase().includes('tigrinya') ? 'ti' : l.toLowerCase().includes('arabic') ? 'ar' : 'en')}
               className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
-                (lang === 'am' && l.includes('Amharic')) || (lang === 'ti' && l.includes('Tigrinya')) || (lang === 'en' && l.includes('English'))
+                (lang === 'am' && l.includes('Amharic')) || (lang === 'ti' && l.includes('Tigrinya')) || (lang === 'ar' && l.includes('Arabic')) || (lang === 'en' && l.includes('English'))
                 ? 'bg-[#B5780A] text-white shadow-lg' : 'text-white/40 hover:text-white'
               }`}
             >
-              {l.includes('Amharic') ? 'አማ' : l.includes('Tigrinya') ? 'ትግ' : 'EN'}
+              {l.includes('Amharic') ? 'አማ' : l.includes('Tigrinya') ? 'ትግ' : l.includes('Arabic') ? 'عرب' : 'EN'}
             </button>
           ))}
         </div>
@@ -48,6 +51,10 @@ export default function RestaurantTemplate({ data, lang: initialLang = 'en' }: {
 
       {/* Hero Section - Cinematic */}
       <section className="relative h-screen flex items-center justify-center text-center px-6 overflow-hidden">
+        {/* Background Blobs for Depth */}
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#B5780A]/10 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#B5780A]/5 rounded-full blur-[120px] animate-pulse delay-700" />
+
         {data.photos?.[0] ? (
           <div className="absolute inset-0 z-0">
             <img src={data.photos[0]} alt="Hero" className="w-full h-full object-cover scale-105" />
@@ -58,19 +65,18 @@ export default function RestaurantTemplate({ data, lang: initialLang = 'en' }: {
         )}
         
         <div className="relative z-10 max-w-5xl">
-          <span className="text-[#B5780A] font-black tracking-[0.4em] uppercase text-xs mb-6 block animate-fade-in">Established 2024</span>
-          <h1 className="text-7xl md:text-[10vw] font-black text-white uppercase leading-[0.85] tracking-tighter mb-8 drop-shadow-2xl">
-            {data.businessName || 'Your Restaurant'}
+          <span className="text-[#B5780A] font-black tracking-[0.5em] uppercase text-[10px] mb-8 block reveal active">Established 2024</span>
+          <h1 className="text-8xl md:text-[12vw] font-black text-white uppercase leading-[0.8] tracking-tighter mb-10 drop-shadow-2xl mask-wrap">
+             <span className="mask-inner active italic">{data.businessName || 'Your Restaurant'}</span>
           </h1>
-          <p className="text-xl md:text-2xl text-white/70 font-light mb-12 max-w-2xl mx-auto italic tracking-wide">
+          <p className="text-xl md:text-3xl text-white/70 font-light mb-16 max-w-2xl mx-auto italic tracking-wide reveal active delay-200">
             {data.tagline || 'Redefining the essence of East African culinary excellence.'}
           </p>
-          <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
-            <button className="group relative px-12 py-5 bg-[#B5780A] text-white font-black rounded-full uppercase tracking-widest hover:bg-[#966308] transition-all overflow-hidden">
+          <div className="flex flex-col md:flex-row gap-6 justify-center items-center reveal active delay-300">
+            <button className="group relative px-14 py-6 bg-[#B5780A] text-white font-black rounded-full uppercase text-xs tracking-[0.3em] hover:bg-white hover:text-[#0A0F1C] transition-all duration-500 shadow-2xl shadow-yellow-900/20">
                <span className="relative z-10">{t.reserve}</span>
-               <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
             </button>
-            <button className="px-12 py-5 border border-white/20 text-white font-black rounded-full uppercase tracking-widest hover:bg-white hover:text-[#0A0F1C] transition-all">
+            <button className="px-14 py-6 border border-white/20 text-white font-black rounded-full uppercase text-xs tracking-[0.3em] hover:bg-white hover:text-[#0A0F1C] transition-all duration-500 backdrop-blur-sm">
               {t.menu}
             </button>
           </div>
@@ -173,17 +179,28 @@ export default function RestaurantTemplate({ data, lang: initialLang = 'en' }: {
             </div>
           </div>
         </div>
-        <div className="md:col-span-7 h-[600px] bg-white/5 rounded-[3rem] overflow-hidden relative border border-white/10">
-          <div className="absolute inset-0 bg-cover bg-center opacity-40 grayscale" style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&q=80")' }} />
-          <div className="absolute inset-0 flex items-center justify-center">
-             <div className="bg-[#0A0F1C]/80 backdrop-blur-md px-10 py-6 rounded-2xl border border-white/10 text-center shadow-2xl">
-                <div className="w-12 h-12 bg-[#B5780A] rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
-                   <MapPin className="text-white" size={24} />
+        <div className="md:col-span-7 h-[600px] bg-white/5 rounded-[3rem] overflow-hidden relative border border-white/10 shadow-2xl">
+          <iframe 
+            width="100%" 
+            height="100%" 
+            frameBorder="0" 
+            style={{ border: 0, filter: 'grayscale(1) contrast(1.2) invert(0.9)' }} 
+            src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}&q=${encodeURIComponent(`${data.address}, ${data.city}`)}`} 
+            allowFullScreen
+          />
+          {/* Fallback if no key */}
+          {!process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY && (
+            <div className="absolute inset-0 bg-[#0A0F1C]/90 backdrop-blur-sm flex items-center justify-center p-12 text-center">
+              <div>
+                <div className="w-16 h-16 bg-[#B5780A] rounded-full flex items-center justify-center mx-auto mb-6">
+                  <MapPin size={32} className="text-white" />
                 </div>
-                <h4 className="font-black uppercase text-sm tracking-widest">{data.businessName}</h4>
-                <p className="text-[10px] text-white/40 mt-1 uppercase tracking-widest">{data.city}</p>
-             </div>
-          </div>
+                <h4 className="text-2xl font-black uppercase italic mb-2">{data.businessName}</h4>
+                <p className="text-white/40 uppercase text-xs tracking-widest">{data.address}, {data.city}</p>
+                <div className="mt-8 px-6 py-2 border border-[#B5780A] text-[#B5780A] text-[10px] font-black uppercase rounded-full">Map View Available in Production</div>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

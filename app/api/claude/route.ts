@@ -21,12 +21,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid messages array' }, { status: 400 })
     }
 
-    const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('AI request timed out after 10s')), 10000)
+    )
+
+    const apiPromise = anthropic.messages.create({
+      model: 'claude-3-5-sonnet-20240620',
       max_tokens: 4000,
       system: systemPrompt || "You are an AI website builder assistant.",
       messages: messages,
     })
+
+    const response: any = await Promise.race([apiPromise, timeoutPromise])
 
     return NextResponse.json({ result: response.content[0] })
   } catch (err: any) {

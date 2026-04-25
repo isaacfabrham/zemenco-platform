@@ -8,8 +8,27 @@ import ChatbotWrapper from "@/components/ChatbotWrapper";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Zemen Co. | Deep Roots. Limitless Growth.",
-  description: "We build high-converting websites and integrate smart AI systems that help Habesha businesses scale, automate operations, and dominate local markets.",
+  title: "Zemen Co. | Digital Architecture for Habesha Excellence",
+  description: "We build premium, high-converting websites and AI systems for Ethiopian and Eritrean businesses. Deep Roots. Limitless Growth.",
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
+  openGraph: {
+    title: 'Zemen Co.',
+    description: 'Digital Architecture for Habesha Excellence',
+    url: 'https://zemenco.com',
+    siteName: 'Zemen Co.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
 };
 
 export default async function RootLayout({

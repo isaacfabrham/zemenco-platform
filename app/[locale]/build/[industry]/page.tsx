@@ -1,9 +1,8 @@
 'use client'
 
 import { useState, useRef, useEffect, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, Link } from '@/navigation'
 import { Send, Loader2, Camera, Check, Globe, Layout, ChevronLeft } from 'lucide-react'
-import Link from 'next/link'
 
 import { useTranslations, useLocale } from 'next-intl'
 import RestaurantTemplate from '@/components/templates/RestaurantTemplate'
@@ -61,7 +60,7 @@ export default function IndustryBuilder({ params }: { params: { industry: string
   const [step, setStep] = useState(0)
   const [messages, setMessages] = useState<{role: 'assistant' | 'user', content: string}[]>([])
   const [input, setInput] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [isPublishing, setIsPublishing] = useState(false)
   
   const [siteData, setSiteData] = useState<any>({
@@ -87,13 +86,32 @@ export default function IndustryBuilder({ params }: { params: { industry: string
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    // Start the conversation
-    const firstQuestion = QUESTIONS[industry][0].question
-    const greeting = locale === 'en' 
-      ? `Welcome! I'm your Zemen AI builder. Let's create your ${industry} website together.`
-      : `እንኳን ደህና መጡ! እኔ የዘመን AI መገንቢያ ነኝ። የ${industry} ድረ-ገጽዎን አብረን እንገንባ።`;
-    
-    setMessages([{ role: 'assistant', content: `${greeting}\n\n${firstQuestion}` }])
+    async function loadExisting() {
+      try {
+        const res = await fetch(`/api/site?industry=${industry}`)
+        const data = await res.json()
+        if (data.site) {
+          setSiteData(data.site.site_data)
+          // If already has data, maybe move to a later step or just greet
+          const greeting = locale === 'en' 
+            ? `Welcome back! I've loaded your ${industry} data. What would you like to update?`
+            : `እንኳን ደህና መጡ! የእርስዎን ${industry} መረጃ ጭኛለሁ። ምን ማስተካከል ይፈልጋሉ?`;
+          setMessages([{ role: 'assistant', content: greeting }])
+        } else {
+          // Start fresh
+          const firstQuestion = QUESTIONS[industry][0].question
+          const greeting = locale === 'en' 
+            ? `Welcome! I'm your Zemen AI builder. Let's create your ${industry} website together.`
+            : `እንኳን ደህና መጡ! እኔ የዘመን AI መገንቢያ ነኝ። የ${industry} ድረ-ገጽዎን አብረን እንገንባ።`;
+          setMessages([{ role: 'assistant', content: `${greeting}\n\n${firstQuestion}` }])
+        }
+      } catch (e) {
+        console.error("Failed to load existing site", e)
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadExisting()
   }, [industry, locale])
 
   useEffect(() => {
@@ -101,6 +119,8 @@ export default function IndustryBuilder({ params }: { params: { industry: string
   }, [messages])
 
   const handleNextStep = async (answer: string) => {
+    if (!answer.trim() && QUESTIONS[industry][step].type !== 'image') return
+    
     const currentQuestion = QUESTIONS[industry][step]
     
     // Update site data based on current question ID
@@ -113,11 +133,15 @@ export default function IndustryBuilder({ params }: { params: { industry: string
       updatedData.services = [{ name: 'Premium Service', price: '50' }]
     } else if (fieldId === 'inventory') {
       updatedData.inventory = [{ make: 'Sample', model: 'Vehicle', year: '2024', price: '25000', mileage: '0', photo: '' }]
+    } else if (fieldId === 'photos') {
+      // Don't overwrite photos array with the success message string
+      // The array was already updated in handleFileUpload
     } else {
       updatedData[fieldId] = answer
     }
 
     setSiteData(updatedData)
+    setInput('')
 
     // Move to next question or finish
     if (step < QUESTIONS[industry].length - 1) {

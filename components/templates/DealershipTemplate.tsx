@@ -25,7 +25,8 @@ interface DealershipData {
   languages: string[]
 }
 
-export default function DealershipTemplate({ data, lang = 'en' }: { data: DealershipData, lang?: string }) {
+export default function DealershipTemplate({ data, lang: initialLang = 'en' }: { data: DealershipData, lang?: string }) {
+  const [lang, setLang] = useState(initialLang)
   const [filter, setFilter] = useState('')
 
   const filteredInventory = data.inventory?.filter(v => 
@@ -33,8 +34,28 @@ export default function DealershipTemplate({ data, lang = 'en' }: { data: Dealer
     v.model.toLowerCase().includes(filter.toLowerCase())
   ) || []
 
+  const dir = lang === 'ar' ? 'rtl' : 'ltr'
+
   return (
-    <div className="bg-[#050505] text-white font-sans min-h-screen selection:bg-[#FF4D00] selection:text-white">
+    <div className="bg-[#050505] text-white font-sans min-h-screen selection:bg-[#FF4D00] selection:text-white" dir={dir}>
+      {/* Premium Language Toggle */}
+      {data.languages?.length > 1 && (
+        <div className="fixed top-24 right-6 z-[100] flex gap-1 bg-white/5 backdrop-blur-xl p-1.5 rounded-full shadow-2xl border border-white/10">
+          {data.languages.map(l => (
+            <button 
+              key={l}
+              onClick={() => setLang(l.toLowerCase().includes('amharic') ? 'am' : l.toLowerCase().includes('tigrinya') ? 'ti' : l.toLowerCase().includes('arabic') ? 'ar' : 'en')}
+              className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
+                (lang === 'am' && l.includes('Amharic')) || (lang === 'ti' && l.includes('Tigrinya')) || (lang === 'ar' && l.includes('Arabic')) || (lang === 'en' && l.includes('English'))
+                ? 'bg-[#FF4D00] text-white shadow-lg' : 'text-white/40 hover:text-white'
+              }`}
+            >
+              {l.includes('Amharic') ? 'አማ' : l.includes('Tigrinya') ? 'ትግ' : l.includes('Arabic') ? 'عرب' : 'EN'}
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Hero Section - High Performance */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         {data.photos?.[0] ? (
@@ -218,8 +239,8 @@ export default function DealershipTemplate({ data, lang = 'en' }: { data: Dealer
             </div>
           </div>
           
-          <div className="flex flex-col justify-between">
-            <div className="space-y-16">
+          <div className="flex flex-col lg:flex-row gap-20">
+            <div className="flex-1 space-y-16">
                <h2 className="text-6xl font-black uppercase tracking-tighter italic leading-tight">Tactical Hub</h2>
                <div className="grid grid-cols-1 gap-12">
                   <div className="flex gap-8 group">
@@ -251,6 +272,31 @@ export default function DealershipTemplate({ data, lang = 'en' }: { data: Dealer
                   </div>
                </div>
             </div>
+            
+            <div className="flex-1 h-[500px] bg-white/5 rounded-sm overflow-hidden relative border border-white/10 shadow-2xl">
+              <iframe 
+                width="100%" 
+                height="100%" 
+                frameBorder="0" 
+                style={{ border: 0, filter: 'grayscale(1) contrast(1.2) invert(0.9) brightness(0.8)' }} 
+                src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}&q=${encodeURIComponent(`${data.address}, ${data.city}`)}`} 
+                allowFullScreen
+              />
+              {/* Fallback if no key */}
+              {!process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY && (
+                <div className="absolute inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-12 text-center">
+                  <div>
+                    <div className="w-16 h-16 bg-[#FF4D00] rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
+                      <MapPin size={32} className="text-white" />
+                    </div>
+                    <h4 className="text-3xl font-black uppercase italic mb-2 tracking-tighter">{data.businessName}</h4>
+                    <p className="text-white/40 uppercase text-[10px] font-black tracking-[0.3em]">{data.address}, {data.city}</p>
+                    <div className="mt-8 px-8 py-3 border-2 border-[#FF4D00] text-[#FF4D00] text-[10px] font-black uppercase tracking-[0.4em]">Tactical Map Grid Online</div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
             <div className="mt-20 p-8 border border-white/5 bg-white/5 rounded-xl">
                <div className="flex items-center gap-4 mb-4">
                   <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />

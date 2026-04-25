@@ -1,12 +1,14 @@
 'use client'
 
 import { useEffect, useState, Suspense } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from '@/navigation'
+import { useLocale } from 'next-intl'
 import { Loader2 } from 'lucide-react'
 
 function CheckoutContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
+  const locale = useLocale()
   const [error, setError] = useState('')
   const plan = searchParams.get('plan')
 
@@ -21,7 +23,7 @@ function CheckoutContent() {
         const res = await fetch('/api/payments/checkout', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ plan })
+          body: JSON.stringify({ plan, locale })
         })
 
         const data = await res.json()

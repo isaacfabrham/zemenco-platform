@@ -56,7 +56,13 @@
       "name": "Starter",
       "price": "$50",
       "desc": "Self-serve builder, AI chatbot assistant, 1 industry template, mobile optimized, contact form, basic SEO",
-      "cta": "Start With Starter"
+      "cta": "Start With Starter",
+      "features": [
+        "Self-serve builder",
+        "AI chatbot assistant",
+        "1 industry template & mobile optimized",
+        "Contact form & basic SEO"
+      ]
     },
     "pro": {
       "name": "Pro",
@@ -64,7 +70,13 @@
       "desc": "Everything in Starter + done-for-you setup, multilingual support, advanced SEO, AI customer chatbot",
       "cta": "Claim Market Dominance",
       "badge": "Ultimate Value",
-      "plus": "Everything in Starter, plus:"
+      "plus": "Everything in Starter, plus:",
+      "features": [
+        "Everything in Starter, plus:",
+        "Done-for-you setup & advanced SEO",
+        "AI customer chatbot for your site",
+        "Multilingual Support (Amharic, Tigrinya, Arabic)"
+      ]
     }
   },
   "footer": {
@@ -76,5 +88,59 @@
     "publishing": "Publishing...",
     "clickUpload": "Click to Upload Image",
     "placeholder": "Type your response..."
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Log in to manage your platform",
+      "email": "Email",
+      "password": "Password",
+      "button": "Log In",
+      "loggingIn": "Logging in...",
+      "noAccount": "Don't have an account?",
+      "signup": "Sign up"
+    },
+    "signup": {
+      "title": "Create your account",
+      "subtitle": "Start building your custom platform",
+      "button": "Sign Up",
+      "creating": "Creating...",
+      "haveAccount": "Already have an account?",
+      "login": "Log in",
+      "success": "Account created! Please check {email} to verify your account."
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome Back",
+    "overview": "Platform Overview",
+    "newSite": "New Site",
+    "inbox": "Inbox",
+    "settings": "Settings",
+    "logout": "Log Out",
+    "upgrade": "Upgrade to Pro",
+    "create": "Create New Site",
+    "stats": {
+      "visits": "Total Visits",
+      "inquiries": "Inquiries",
+      "plan": "Plan Type",
+      "status": "Status"
+    },
+    "projects": {
+      "title": "Active Projects",
+      "noSites": "No sites yet",
+      "noSitesDesc": "Your digital empire starts here.",
+      "startBuilding": "Start Building",
+      "edit": "Edit Site",
+      "visit": "Visit Live",
+      "published": "Published",
+      "draft": "Draft"
+    },
+    "domain": {
+      "title": "Custom Domain",
+      "proOnly": "Pro Feature Only",
+      "upgradeDesc": "Upgrade to connect your domain",
+      "verify": "Verify Domain Connection"
+    }
   }
 }

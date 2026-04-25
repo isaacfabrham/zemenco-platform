@@ -22,12 +22,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { plan } = await req.json()
+    const { plan, locale } = await req.json()
     const selectedPlan = PLANS[plan as keyof typeof PLANS]
 
     if (!selectedPlan || !selectedPlan.priceId) {
       return NextResponse.json({ error: 'Invalid plan selected or missing price ID' }, { status: 400 })
     }
+
+    const localePrefix = locale && locale !== 'en' ? `/${locale}` : ''
 
     // Create Checkout Sessions from body params.
     const session = await stripe.checkout.sessions.create({
@@ -48,8 +50,8 @@ export async function POST(req: Request) {
           plan: plan,
         }
       },
-      success_url: `${new URL(req.url).origin}/dashboard?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${new URL(req.url).origin}/`,
+      success_url: `${new URL(req.url).origin}${localePrefix}/dashboard?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${new URL(req.url).origin}${localePrefix}/`,
     })
 
     return NextResponse.json({ url: session.url })
