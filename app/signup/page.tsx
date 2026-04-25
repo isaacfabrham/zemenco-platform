@@ -9,7 +9,11 @@ export default function SignupPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [success, setSuccess] = useState(false);
   const router = useRouter();
+  
+  // Get plan from URL
+  const plan = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('plan') : null;
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +30,8 @@ export default function SignupPage() {
       const data = await res.json();
       if (data.error) throw new Error(data.error);
 
-      setMessage('Check your email to verify your account.');
+      setSuccess(true);
+      setMessage(`Account created! Please check ${email} to verify your account and continue to checkout.`);
     } catch (err: any) {
       setMessage(err.message);
     } finally {

@@ -1,12 +1,16 @@
 import { NextResponse } from 'next/server'
+import { cookies } from 'next/headers'
 import { createClient } from '@/utils/supabase/server'
 
 export async function POST(request: Request) {
   try {
-    const { email, password, action } = await request.json()
+    const { email, password, action, plan } = await request.json()
     const supabase = createClient()
 
     if (action === 'signup') {
+      if (plan) {
+        cookies().set('selected_plan', plan, { maxAge: 60 * 60 }) // 1 hour
+      }
       const { data, error } = await supabase.auth.signUp({
         email,
         password,

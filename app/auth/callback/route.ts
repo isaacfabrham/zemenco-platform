@@ -11,6 +11,11 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     
     if (!error) {
+      const plan = request.headers.get('cookie')?.split('; ').find(row => row.startsWith('selected_plan='))?.split('=')[1]
+      
+      if (plan) {
+        return NextResponse.redirect(`${origin}/checkout?plan=${plan}`)
+      }
       return NextResponse.redirect(`${origin}${next}`)
     }
   }
