@@ -1,13 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import { useTranslations, useLocale } from 'next-intl';
+import { useRouter, usePathname } from '@/navigation';
 import Link from 'next/link';
 
 export default function Home() {
-  const [lang, setLang] = useState('en');
+  const tNav = useTranslations('nav');
+  const tHero = useTranslations('hero');
+  const tProcess = useTranslations('process');
+  const tTemplates = useTranslations('templates');
+  const tPricing = useTranslations('pricing');
+  const tFooter = useTranslations('footer');
+  
+  const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
 
-  // We will keep a simplified version of the landing page to start,
-  // fully utilizing Tailwind CSS while preserving brand colors.
+  const handleLangChange = (newLocale: string) => {
+    router.replace(pathname, { locale: newLocale });
+  };
+
   return (
     <main className="min-h-screen bg-bg-surface text-text-main font-sans">
       
@@ -18,14 +30,14 @@ export default function Home() {
             <div className="font-extrabold text-xl tracking-tighter">ZEMEN CO.</div>
           </Link>
           <nav className="hidden md:flex items-center gap-12">
-            <Link href="#expertise" className="text-sm font-semibold text-text-muted uppercase tracking-widest hover:text-text-main transition-colors">Expertise</Link>
-            <Link href="#pricing" className="text-sm font-semibold text-text-muted uppercase tracking-widest hover:text-text-main transition-colors">Pricing</Link>
-            <Link href="#reviews" className="text-sm font-semibold text-text-muted uppercase tracking-widest hover:text-text-main transition-colors">Reviews</Link>
+            <Link href="#expertise" className="text-sm font-semibold text-text-muted uppercase tracking-widest hover:text-text-main transition-colors">{tNav('expertise')}</Link>
+            <Link href="#pricing" className="text-sm font-semibold text-text-muted uppercase tracking-widest hover:text-text-main transition-colors">{tNav('pricing')}</Link>
+            <Link href="#reviews" className="text-sm font-semibold text-text-muted uppercase tracking-widest hover:text-text-main transition-colors">{tNav('reviews')}</Link>
           </nav>
           <div className="flex items-center gap-6">
             <select 
-              value={lang} 
-              onChange={(e) => setLang(e.target.value)}
+              value={locale} 
+              onChange={(e) => handleLangChange(e.target.value)}
               className="bg-transparent font-semibold cursor-pointer outline-none"
             >
               <option value="en">EN</option>
@@ -34,7 +46,7 @@ export default function Home() {
               <option value="ar">عرب</option>
             </select>
             <Link href="#contact" className="px-7 py-3.5 bg-text-main text-bg-white font-semibold text-sm rounded uppercase hover:bg-brand-gold hover:-translate-y-1 transition-all">
-              Start Scaling
+              {tNav('startScaling')}
             </Link>
           </div>
         </div>
@@ -47,14 +59,14 @@ export default function Home() {
         </div>
         <div className="relative z-10 max-w-[1200px] flex flex-col items-center">
           <h1 className="text-5xl md:text-[6.5vw] leading-[0.95] font-bold uppercase mb-10 tracking-tighter">
-            <span className="block">Build Your Business</span>
-            <span className="block">Website in <span className="text-brand-gold">10 Minutes</span></span>
+            <span className="block">{tHero('title1')}</span>
+            <span className="block">{tHero('title2')} <span className="text-brand-gold">{tHero('title3')}</span></span>
           </h1>
           <p className="text-xl text-text-muted max-w-[700px] leading-relaxed mb-14">
-            Choose your industry, answer a few questions, and your professional website is ready — powered by AI, built for Habesha businesses
+            {tHero('subtitle')}
           </p>
           <Link href="/build" className="px-12 py-5 bg-text-main text-bg-white font-semibold text-lg rounded uppercase hover:bg-brand-gold hover:-translate-y-1 transition-all">
-            Start Building Free
+            {tHero('cta')}
           </Link>
         </div>
       </section>
@@ -63,15 +75,15 @@ export default function Home() {
       <section id="how-it-works" className="bg-bg-dark text-bg-white py-[120px]">
         <div className="container mx-auto px-10 max-w-[1400px]">
           <div className="text-center mb-20">
-            <span className="block text-sm font-semibold text-brand-gold tracking-[0.25em] uppercase mb-4 opacity-80">PROCESS</span>
-            <h2 className="text-5xl font-bold mb-6 tracking-tighter">How It Works</h2>
-            <p className="text-xl text-white/70 max-w-[600px] mx-auto">Three simple steps to launch your custom AI-powered digital platform.</p>
+            <span className="block text-sm font-semibold text-brand-gold tracking-[0.25em] uppercase mb-4 opacity-80">{tProcess('badge')}</span>
+            <h2 className="text-5xl font-bold mb-6 tracking-tighter">{tProcess('title')}</h2>
+            <p className="text-xl text-white/70 max-w-[600px] mx-auto">{tProcess('subtitle')}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {[
-              { step: '1', title: 'Pick your industry', desc: 'Restaurant, Salon, or Car Dealership', color: 'bg-brand-green' },
-              { step: '2', title: 'Chat with our AI builder', desc: 'It asks you questions and builds your site live', color: 'bg-brand-gold' },
-              { step: '3', title: 'Go live in minutes', desc: 'Your site is published and ready for customers', color: 'bg-brand-red' }
+              { step: '1', title: tProcess('step1.title'), desc: tProcess('step1.desc'), color: 'bg-brand-green' },
+              { step: '2', title: tProcess('step2.title'), desc: tProcess('step2.desc'), color: 'bg-brand-gold' },
+              { step: '3', title: tProcess('step3.title'), desc: tProcess('step3.desc'), color: 'bg-brand-red' }
             ].map((item, i) => (
               <div key={i} className="text-center p-10 bg-white/5 rounded border border-white/10">
                 <div className={`w-16 h-16 ${item.color} text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6`}>
@@ -89,21 +101,21 @@ export default function Home() {
       <section id="templates" className="bg-bg-surface py-[120px]">
         <div className="container mx-auto px-10 max-w-[1400px]">
           <div className="text-center mb-20">
-            <span className="block text-sm font-semibold text-brand-gold tracking-[0.25em] uppercase mb-4 opacity-80">TEMPLATES</span>
-            <h2 className="text-5xl font-bold mb-6 tracking-tighter">Industry Selector</h2>
-            <p className="text-xl text-text-muted max-w-[600px] mx-auto">Choose from our specialized templates designed for your specific business needs.</p>
+            <span className="block text-sm font-semibold text-brand-gold tracking-[0.25em] uppercase mb-4 opacity-80">{tTemplates('badge')}</span>
+            <h2 className="text-5xl font-bold mb-6 tracking-tighter">{tTemplates('title')}</h2>
+            <p className="text-xl text-text-muted max-w-[600px] mx-auto">{tTemplates('subtitle')}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-[1100px] mx-auto">
             {[
-              { title: 'Restaurant', url: '/build/restaurant', desc: 'Pre-loaded with menu integrations, reservations, AI chatbot, and multilingual support.' },
-              { title: 'Salon', url: '/build/salon', desc: 'Pre-loaded with automated booking, AI chatbot, service menus, and multilingual support.', border: 'border-t-4 border-t-brand-green' },
-              { title: 'Car Dealership', url: '/build/dealership', desc: 'Pre-loaded with inventory display, test drive booking, AI chatbot, and multilingual support.' }
+              { title: tTemplates('restaurant.title'), url: '/build/restaurant', desc: tTemplates('restaurant.desc') },
+              { title: tTemplates('salon.title'), url: '/build/salon', desc: tTemplates('salon.desc'), border: 'border-t-4 border-t-brand-green' },
+              { title: tTemplates('dealership.title'), url: '/build/dealership', desc: tTemplates('dealership.desc') }
             ].map((item, i) => (
               <div key={i} className={`bg-bg-white p-10 border border-border-color rounded flex flex-col hover:-translate-y-2 transition-transform shadow-soft hover:shadow-hover ${item.border || ''}`}>
                 <h3 className="text-3xl font-bold mb-4">{item.title}</h3>
                 <p className="text-text-muted text-lg mb-8 flex-1">{item.desc}</p>
                 <Link href={item.url} className="px-6 py-4 border border-border-color font-semibold uppercase text-center rounded hover:bg-bg-surface transition-colors">
-                  Start with this template
+                  {tTemplates('cta')}
                 </Link>
               </div>
             ))}
@@ -115,19 +127,19 @@ export default function Home() {
       <section id="pricing" className="bg-bg-surface py-[160px]">
         <div className="container mx-auto px-10 max-w-[1400px]">
           <div className="text-center mb-20">
-            <span className="block text-sm font-semibold text-brand-gold tracking-[0.25em] uppercase mb-4 opacity-80">ዋጋዎች</span>
-            <h2 className="text-5xl font-bold mb-6 tracking-tighter">Transparent. Elite. Scalable.</h2>
-            <p className="text-xl text-text-muted max-w-[600px] mx-auto">Stop overpaying for generic templates. Invest in bespoke digital architecture that drives actual ROI.</p>
+            <span className="block text-sm font-semibold text-brand-gold tracking-[0.25em] uppercase mb-4 opacity-80">{tPricing('badge')}</span>
+            <h2 className="text-5xl font-bold mb-6 tracking-tighter">{tPricing('title')}</h2>
+            <p className="text-xl text-text-muted max-w-[600px] mx-auto">{tPricing('subtitle')}</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-[1100px] mx-auto">
             {/* Starter Plan */}
             <div className="bg-bg-white p-16 border border-border-color rounded shadow-soft hover:shadow-hover hover:-translate-y-2 transition-transform flex flex-col">
-              <h3 className="text-3xl font-bold mb-4">Starter</h3>
+              <h3 className="text-3xl font-bold mb-4">{tPricing('starter.name')}</h3>
               <div className="text-7xl font-extrabold mb-8 flex items-baseline gap-2 tracking-tighter">
-                $50<span className="text-xl font-medium text-text-muted tracking-normal">/month</span>
+                {tPricing('starter.price')}<span className="text-xl font-medium text-text-muted tracking-normal">{tPricing('month')}</span>
               </div>
-              <p className="text-lg text-text-muted mb-10">Self-serve builder, AI chatbot assistant, 1 industry template, mobile optimized, contact form, basic SEO</p>
+              <p className="text-lg text-text-muted mb-10">{tPricing('starter.desc')}</p>
               <ul className="mb-14 space-y-6 flex-1">
                 {['Self-serve builder', 'AI chatbot assistant', '1 industry template & mobile optimized', 'Contact form & basic SEO'].map((feat, i) => (
                   <li key={i} className="flex items-start gap-4 text-lg">
@@ -137,7 +149,7 @@ export default function Home() {
                 ))}
               </ul>
               <Link href="/signup?plan=starter" className="px-12 py-5 border border-border-color text-center font-semibold text-lg rounded uppercase hover:bg-bg-surface transition-colors">
-                Start With Starter
+                {tPricing('starter.cta')}
               </Link>
             </div>
             
@@ -145,16 +157,16 @@ export default function Home() {
             <div className="bg-bg-white p-16 border border-brand-gold rounded shadow-hover hover:-translate-y-2 transition-transform flex flex-col relative md:-translate-y-6">
               <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-brand-green via-brand-gold to-brand-red" />
               <div>
-                <span className="inline-block px-4 py-1.5 bg-brand-gold/10 text-brand-gold text-sm font-bold uppercase tracking-widest mb-6 rounded-full">Ultimate Value</span>
+                <span className="inline-block px-4 py-1.5 bg-brand-gold/10 text-brand-gold text-sm font-bold uppercase tracking-widest mb-6 rounded-full">{tPricing('pro.badge')}</span>
               </div>
-              <h3 className="text-3xl font-bold mb-4">Pro</h3>
+              <h3 className="text-3xl font-bold mb-4">{tPricing('pro.name')}</h3>
               <div className="text-7xl font-extrabold mb-8 flex items-baseline gap-2 tracking-tighter">
-                $150<span className="text-xl font-medium text-text-muted tracking-normal">/month</span>
+                {tPricing('pro.price')}<span className="text-xl font-medium text-text-muted tracking-normal">{tPricing('month')}</span>
               </div>
-              <p className="text-lg text-text-muted mb-10">Everything in Starter + done-for-you setup, multilingual support, advanced SEO, AI customer chatbot</p>
+              <p className="text-lg text-text-muted mb-10">{tPricing('pro.desc')}</p>
               <ul className="mb-14 space-y-6 flex-1">
                 {[
-                  <strong key="0">Everything in Starter, plus:</strong>,
+                  <strong key="0">{tPricing('pro.plus')}</strong>,
                   'Done-for-you setup & advanced SEO',
                   'AI customer chatbot for your site',
                   'Multilingual Support (Amharic, Tigrinya, Arabic)'
@@ -166,7 +178,7 @@ export default function Home() {
                 ))}
               </ul>
               <Link href="/signup?plan=pro" className="px-12 py-5 bg-brand-gold text-white text-center font-semibold text-lg rounded uppercase hover:bg-brand-dark transition-colors">
-                Claim Market Dominance
+                {tPricing('pro.cta')}
               </Link>
             </div>
           </div>
@@ -178,7 +190,7 @@ export default function Home() {
         <div className="container mx-auto px-10 max-w-[1400px]">
           <div className="font-extrabold text-2xl tracking-tighter mb-10 inline-block bg-white text-bg-dark px-4 py-2 rounded">ZEMEN CO.</div>
           <div className="text-sm text-white/40">
-            © {new Date().getFullYear()} Zemen Co. Premium Digital Platforms. All rights reserved.
+            © {new Date().getFullYear()} Zemen Co. Premium Digital Platforms. {tFooter('rights')}
           </div>
         </div>
       </footer>

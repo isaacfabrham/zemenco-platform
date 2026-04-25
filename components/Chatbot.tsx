@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { MessageCircle, X, Send, Bot, User, Loader2 } from 'lucide-react'
+import { useLocale } from 'next-intl'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -9,9 +10,10 @@ interface Message {
 }
 
 export default function Chatbot() {
+  const locale = useLocale()
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: 'Hello! I am the Zemen Assistant. How can I help you today?' }
+    { role: 'assistant', content: locale === 'en' ? 'Hello! I am the Zemen Assistant. How can I help you today?' : 'ሰላም! እኔ የዘመን ረዳት ነኝ። ዛሬ እንዴት ልረዳዎት እችላለሁ?' }
   ])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -42,7 +44,8 @@ export default function Chatbot() {
             role: m.role,
             content: m.content
           })),
-          systemPrompt: "You are the Zemen Co. Assistant. You help users navigate our platform, understand our pricing (which starts at $500 for basic sites), and explain our AI integration services. Zemen Co. specializes in building high-converting websites for Habesha businesses. Be professional, helpful, and multilingual (respond in the language the user uses, e.g., English or Amharic)."
+          locale,
+          systemPrompt: "You are the Zemen Co. Assistant. You help users navigate our platform and explain our AI services. Zemen Co. specializes in high-converting websites for Habesha businesses."
         })
       })
 

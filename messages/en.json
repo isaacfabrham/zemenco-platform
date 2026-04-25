@@ -1,0 +1,80 @@
+{
+  "nav": {
+    "expertise": "Expertise",
+    "pricing": "Pricing",
+    "reviews": "Reviews",
+    "startScaling": "Start Scaling"
+  },
+  "hero": {
+    "title1": "Build Your Business",
+    "title2": "Website in",
+    "title3": "10 Minutes",
+    "subtitle": "Choose your industry, answer a few questions, and your professional website is ready — powered by AI, built for Habesha businesses",
+    "cta": "Start Building Free"
+  },
+  "process": {
+    "badge": "PROCESS",
+    "title": "How It Works",
+    "subtitle": "Three simple steps to launch your custom AI-powered digital platform.",
+    "step1": {
+      "title": "Pick your industry",
+      "desc": "Restaurant, Salon, or Car Dealership"
+    },
+    "step2": {
+      "title": "Chat with our AI builder",
+      "desc": "It asks you questions and builds your site live"
+    },
+    "step3": {
+      "title": "Go live in minutes",
+      "desc": "Your site is published and ready for customers"
+    }
+  },
+  "templates": {
+    "badge": "TEMPLATES",
+    "title": "Industry Selector",
+    "subtitle": "Choose from our specialized templates designed for your specific business needs.",
+    "restaurant": {
+      "title": "Restaurant",
+      "desc": "Pre-loaded with menu integrations, reservations, AI chatbot, and multilingual support."
+    },
+    "salon": {
+      "title": "Salon",
+      "desc": "Pre-loaded with automated booking, AI chatbot, service menus, and multilingual support."
+    },
+    "dealership": {
+      "title": "Car Dealership",
+      "desc": "Pre-loaded with inventory display, test drive booking, AI chatbot, and multilingual support."
+    },
+    "cta": "Start with this template"
+  },
+  "pricing": {
+    "badge": "ዋጋዎች",
+    "title": "Transparent. Elite. Scalable.",
+    "subtitle": "Stop overpaying for generic templates. Invest in bespoke digital architecture that drives actual ROI.",
+    "month": "/month",
+    "starter": {
+      "name": "Starter",
+      "price": "$50",
+      "desc": "Self-serve builder, AI chatbot assistant, 1 industry template, mobile optimized, contact form, basic SEO",
+      "cta": "Start With Starter"
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "$150",
+      "desc": "Everything in Starter + done-for-you setup, multilingual support, advanced SEO, AI customer chatbot",
+      "cta": "Claim Market Dominance",
+      "badge": "Ultimate Value",
+      "plus": "Everything in Starter, plus:"
+    }
+  },
+  "footer": {
+    "rights": "All rights reserved."
+  },
+  "builder": {
+    "title": "AI Builder",
+    "publish": "Publish Site",
+    "publishing": "Publishing...",
+    "clickUpload": "Click to Upload Image",
+    "placeholder": "Type your response..."
+  }
+}

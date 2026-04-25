@@ -5,19 +5,28 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
 
 export async function POST(req: Request) {
   try {
-    const { messages, systemPrompt } = await req.json()
+    const { messages, systemPrompt, locale } = await req.json()
+    
+    const localeMap: Record<string, string> = {
+      en: 'English',
+      am: 'Amharic (አማርኛ)',
+      ti: 'Tigrinya (ትግርኛ)',
+      ar: 'Arabic (العربية)'
+    }
+
+    const language = localeMap[locale as string] || 'English'
 
     if (!process.env.GEMINI_API_KEY) {
       // Mock response for demo mode
       await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate delay
       return NextResponse.json({ 
-        result: { text: "Hello! I am currently running in 'Demo Mode' because the Gemini API Key is missing. Once the key is added, I'll be fully powered by Gemini AI!" } 
+        result: { text: `Hello! I am currently running in 'Demo Mode'. My primary language is set to ${language}.` } 
       })
     }
 
     const model = genAI.getGenerativeModel({ 
       model: 'gemini-1.5-flash',
-      systemInstruction: systemPrompt || "You are the Zemen Co. Assistant. Be helpful, professional, and multilingual."
+      systemInstruction: `${systemPrompt || "You are the Zemen Co. Assistant."} You MUST respond only in ${language}.`
     })
 
     // Convert messages to Gemini format

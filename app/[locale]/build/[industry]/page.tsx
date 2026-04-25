@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Send, Loader2, Camera, Check, Globe, Layout, ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 
-// Import templates
+import { useTranslations, useLocale } from 'next-intl'
 import RestaurantTemplate from '@/components/templates/RestaurantTemplate'
 import SalonTemplate from '@/components/templates/SalonTemplate'
 import DealershipTemplate from '@/components/templates/DealershipTemplate'
@@ -56,6 +56,7 @@ const QUESTIONS: Record<Industry, any[]> = {
 export default function IndustryBuilder({ params }: { params: { industry: string } }) {
   const industry = params.industry as Industry
   const router = useRouter()
+  const locale = useLocale()
   
   const [step, setStep] = useState(0)
   const [messages, setMessages] = useState<{role: 'assistant' | 'user', content: string}[]>([])
@@ -88,8 +89,12 @@ export default function IndustryBuilder({ params }: { params: { industry: string
   useEffect(() => {
     // Start the conversation
     const firstQuestion = QUESTIONS[industry][0].question
-    setMessages([{ role: 'assistant', content: `Welcome! I'm your Zemen AI builder. Let's create your ${industry} website together. \n\n${firstQuestion}` }])
-  }, [industry])
+    const greeting = locale === 'en' 
+      ? `Welcome! I'm your Zemen AI builder. Let's create your ${industry} website together.`
+      : `እንኳን ደህና መጡ! እኔ የዘመን AI መገንቢያ ነኝ። የ${industry} ድረ-ገጽዎን አብረን እንገንባ።`;
+    
+    setMessages([{ role: 'assistant', content: `${greeting}\n\n${firstQuestion}` }])
+  }, [industry, locale])
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -172,6 +177,7 @@ export default function IndustryBuilder({ params }: { params: { industry: string
     }
   }
 
+  const tBuilder = useTranslations('builder')
   const currentQ = QUESTIONS[industry][step]
 
   return (
@@ -183,7 +189,7 @@ export default function IndustryBuilder({ params }: { params: { industry: string
             <Link href="/dashboard" className="text-white/50 hover:text-white">
               <ChevronLeft size={20} />
             </Link>
-            <h2 className="text-sm font-bold uppercase tracking-widest text-[#B5780A]">AI Builder</h2>
+            <h2 className="text-sm font-bold uppercase tracking-widest text-[#B5780A]">{tBuilder('title')}</h2>
           </div>
           <span className="text-[10px] bg-white/5 px-2 py-1 rounded text-white/40 uppercase font-bold tracking-widest">
             {step + 1} / {QUESTIONS[industry].length}
@@ -235,7 +241,7 @@ export default function IndustryBuilder({ params }: { params: { industry: string
                 className="w-full p-4 bg-white/10 border-2 border-dashed border-white/20 rounded-xl text-white flex flex-col items-center gap-2 hover:border-[#B5780A] hover:text-[#B5780A] transition-all"
               >
                 <Camera size={24} />
-                <span className="text-xs font-bold uppercase tracking-widest">Click to Upload Image</span>
+                <span className="text-xs font-bold uppercase tracking-widest">{tBuilder('clickUpload')}</span>
               </button>
             </div>
           )}
@@ -248,7 +254,7 @@ export default function IndustryBuilder({ params }: { params: { industry: string
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleNextStep(input)}
-                placeholder="Type your response..."
+                placeholder={tBuilder('placeholder')}
                 className="w-full pl-4 pr-12 py-4 bg-white/5 border border-white/10 rounded-xl text-white text-sm outline-none focus:border-[#B5780A] transition-all"
               />
               <button 
@@ -281,7 +287,7 @@ export default function IndustryBuilder({ params }: { params: { industry: string
             className="flex items-center gap-2 px-6 py-2.5 bg-[#1F6B3A] text-white text-[11px] font-black uppercase tracking-widest rounded-lg hover:bg-[#2e9e56] disabled:opacity-30 disabled:grayscale transition-all"
           >
             {isPublishing ? <Loader2 size={14} className="animate-spin" /> : <Globe size={14} />}
-            {isPublishing ? 'Publishing...' : 'Publish Site'}
+            {isPublishing ? tBuilder('publishing') : tBuilder('publish')}
           </button>
         </div>
         

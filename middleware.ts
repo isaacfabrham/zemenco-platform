@@ -1,16 +1,26 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import createIntlMiddleware from 'next-intl/middleware'
+
+const locales = ['en', 'am', 'ti', 'ar'];
+const publicPages = ['/', '/login', '/signup', '/auth/callback'];
+
+const intlMiddleware = createIntlMiddleware({
+  locales,
+  defaultLocale: 'en'
+});
 
 export async function middleware(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  })
+  const { pathname } = request.nextUrl;
+
+  // 1. Handle Localization first
+  const response = intlMiddleware(request);
+
+  // 2. Handle Supabase Auth
+  let supabaseResponse = response;
 
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    console.error('Supabase environment variables are missing!')
-    return supabaseResponse
+    return supabaseResponse;
   }
 
   const supabase = createServerClient(
@@ -22,69 +32,31 @@ export async function middleware(request: NextRequest) {
           return request.cookies.get(name)?.value
         },
         set(name: string, value: string, options: CookieOptions) {
-          request.cookies.set({
-            name,
-            value,
-            ...options,
-          })
-          supabaseResponse = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          })
-          supabaseResponse.cookies.set({
-            name,
-            value,
-            ...options,
-          })
+          request.cookies.set({ name, value, ...options })
+          supabaseResponse.cookies.set({ name, value, ...options })
         },
         remove(name: string, options: CookieOptions) {
-          request.cookies.set({
-            name,
-            value: '',
-            ...options,
-          })
-          supabaseResponse = NextResponse.next({
-            request: {
-              headers: request.headers,
-            },
-          })
-          supabaseResponse.cookies.set({
-            name,
-            value: '',
-            ...options,
-          })
+          request.cookies.set({ name, value: '', ...options })
+          supabaseResponse.cookies.set({ name, value: '', ...options })
         },
       },
     }
   )
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
 
-  // Protected routes
-  const isProtectedRoute = request.nextUrl.pathname.startsWith('/dashboard') || 
-                           request.nextUrl.pathname.startsWith('/build')
+  // 3. Protected Route Gating
+  const isProtectedRoute = pathname.includes('/dashboard') || pathname.includes('/build');
 
   if (!user && isProtectedRoute) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/login'
-    return NextResponse.redirect(url)
+    const locale = pathname.split('/')[1] || 'en';
+    const loginUrl = new URL(`/${locale}/login`, request.url);
+    return NextResponse.redirect(loginUrl);
   }
 
-  return supabaseResponse
+  return supabaseResponse;
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * Feel free to modify this pattern to include more paths.
-     */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
-  ],
+  matcher: ['/', '/(am|en|ti|ar)/:path*', '/((?!api|_next|_vercel|.*\\..*).*)']
 }
