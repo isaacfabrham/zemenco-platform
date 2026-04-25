@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
-import { v4 as uuidv4 } from 'uuid'
 
 export async function POST(req: Request) {
   try {
@@ -29,7 +28,7 @@ export async function POST(req: Request) {
     }
 
     const fileExt = file.name.split('.').pop()
-    const fileName = `${user.id}/${uuidv4()}.${fileExt}`
+    const fileName = `${user.id}/${crypto.randomUUID()}.${fileExt}`
 
     const { data, error } = await supabase.storage
       .from('site-images')
