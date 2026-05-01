@@ -6,7 +6,10 @@ This is a Next.js 14 application powered by Supabase, Stripe, and Anthropic's Cl
 
 Before you begin, ensure you have the following API keys ready:
 - **Supabase**: URL, Anon Key, and Service Role Key (Admin)
-- **Anthropic**: API Key (`claude-sonnet-4-20250514`)
+- **Anthropic**: API Key (`claude-3-5-sonnet-20240620`)
+- **Ollama**: Self-hosted URL and models (`llama3.1:70b`, `llama3.1:8b`, `nomic-embed-text`)
+- **OpenRouter**: API Key for fallback
+- **Redis**: Connection string for BullMQ queue
 - **Stripe**: Publishable Key, Secret Key, and Webhook Secret
 
 ## Local Setup
@@ -19,7 +22,7 @@ Before you begin, ensure you have the following API keys ready:
    *(Note: Never commit `.env.local` to GitHub! It is already listed in `.gitignore`.)*
 
 2. **Database Setup (Supabase)**
-   Execute the contents of `supabase/schema.sql` in your Supabase SQL Editor to create the required tables (`users`, `sites`, `subscriptions`, `onboarding_sessions`), set up Row Level Security (RLS) policies, and configure the authentication triggers.
+   Execute the contents of `supabase/schema.sql` AND `supabase/migrations/20260501_zemen_agent.sql` in your Supabase SQL Editor. This sets up the core tables and the specialized agent memory (pgvector), error logging, and version history tables.
 
 3. **Install Dependencies**
    ```bash
