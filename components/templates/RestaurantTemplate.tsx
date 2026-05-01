@@ -15,17 +15,22 @@ interface RestaurantData {
   photos: string[]
   bookingMethod: string
   languages: string[]
+  theme?: {
+    primaryColor: string
+    backgroundColor: string
+  }
 }
 
 export default function RestaurantTemplate({ data, lang: initialLang = 'en' }: { data: RestaurantData, lang?: string }) {
   const [lang, setLang] = React.useState(initialLang)
 
-  const t = {
+  const translations = {
     en: { reserve: 'Book a Table', menu: 'Signature Menu', visit: 'Find Us', story: 'Our Story' },
     am: { reserve: 'ጠረጴዛ ያስይዙ', menu: 'የምግብ ዝርዝር', visit: 'ይምጡ ይጎብኙን', story: 'ታሪካችን' },
     ti: { reserve: 'ቦታ ትሓዙ', menu: 'ዝርዝር መግቢ', visit: 'በጽሑና', story: 'ታሪኽና' },
     ar: { reserve: 'احجز طاولة', menu: 'قائمة الطعام', visit: 'زورونا', story: 'قصتنا' }
-  }[lang as keyof typeof t] || t.en
+  }
+  const t = translations[lang as keyof typeof translations] || translations.en
 
   const dir = lang === 'ar' ? 'rtl' : 'ltr'
 

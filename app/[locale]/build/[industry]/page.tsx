@@ -237,7 +237,7 @@ export default function IndustryBuilder({ params }: { params: { industry: string
             </button>
           </div>
           <p className="mt-4 text-[10px] text-white/20 text-center uppercase font-bold tracking-widest">
-            Try: "Make it look more luxurious" or "Add a team section"
+            Try: &quot;Make it look more luxurious&quot; or &quot;Add a team section&quot;
           </p>
         </div>
       </div>

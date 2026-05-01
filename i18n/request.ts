@@ -7,12 +7,16 @@ import {join} from 'path';
 const locales = ['en', 'am', 'ti', 'ar'];
 
 export default getRequestConfig(async ({locale}) => {
+  const safeLocale = locale as string;
   // Validate that the incoming `locale` parameter is valid
-  if (!locales.includes(locale as any)) notFound();
+  if (!locales.includes(safeLocale)) notFound();
 
   const messages = JSON.parse(
-    readFileSync(join(process.cwd(), 'messages', `${locale}.json`), 'utf-8')
+    readFileSync(join(process.cwd(), 'messages', `${safeLocale}.json`), 'utf-8')
   );
 
-  return { messages };
+  return {
+    locale: safeLocale,
+    messages
+  };
 });

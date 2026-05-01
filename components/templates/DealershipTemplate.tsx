@@ -23,6 +23,10 @@ interface DealershipData {
   financingOptions: string
   photos: string[]
   languages: string[]
+  theme?: {
+    primaryColor: string
+    backgroundColor: string
+  }
 }
 
 export default function DealershipTemplate({ data, lang: initialLang = 'en' }: { data: DealershipData, lang?: string }) {

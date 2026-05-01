@@ -210,8 +210,8 @@ export default function DashboardPage() {
                 <p className="text-sm text-gray-600">To connect your own domain (e.g. www.yourname.com):</p>
                 <div className="bg-gray-50 p-4 rounded-lg space-y-2 font-mono text-[10px]">
                   <p>1. Go to your domain provider (GoDaddy, Namecheap, etc.)</p>
-                  <p>2. Add an A Record: @ -> 76.76.21.21</p>
-                  <p>3. Add a CNAME: www -> cname.vercel-dns.com</p>
+                  <p>2. Add an A Record: @ {"->"} 76.76.21.21</p>
+                  <p>3. Add a CNAME: www {"->"} cname.vercel-dns.com</p>
                 </div>
                 <button className="w-full py-3 bg-[#0A0F1C] text-white text-[10px] font-bold uppercase rounded-lg">{t('domain.verify')}</button>
               </div>

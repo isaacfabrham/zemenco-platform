@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/utils/supabase/server'
+import { cookies } from 'next/headers'
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
@@ -16,7 +17,8 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     
     if (!error) {
-      const plan = request.cookies.get('selected_plan')?.value
+      const cookieStore = cookies()
+      const plan = cookieStore.get('selected_plan')?.value
       
       if (plan) {
         return NextResponse.redirect(`${origin}/${locale}/checkout?plan=${plan}`)

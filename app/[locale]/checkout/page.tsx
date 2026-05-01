@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, Suspense } from 'react'
-import { useRouter } from '@/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useLocale } from 'next-intl'
 import { Loader2 } from 'lucide-react'
 
@@ -38,7 +38,7 @@ function CheckoutContent() {
     }
 
     startCheckout()
-  }, [plan, router])
+  }, [plan, router, locale]) // Added locale to dependencies to be safe
 
   if (error) {
     return (
