@@ -161,6 +161,28 @@ export default function IndustryBuilder({ params }: { params: { industry: string
     }
   }
 
+  const handleSave = async () => {
+    setLoading(true)
+    try {
+      await fetch('/api/site', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: siteId,
+          templateType: industry,
+          businessName: siteData.businessName,
+          published: false,
+          ...siteData
+        })
+      })
+      setMessages(prev => [...prev, { role: 'system', content: 'Draft saved successfully.' }])
+    } catch (e) {
+      console.error("Save failed", e)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="flex h-screen bg-[#0A0F1C] overflow-hidden pt-[90px]">
       {/* LEFT: Agent Chat Interface */}
@@ -257,8 +279,12 @@ export default function IndustryBuilder({ params }: { params: { industry: string
              </div>
           </div>
           <div className="flex items-center gap-4">
-            <button className="flex items-center gap-2 px-5 py-2.5 bg-white/5 text-white/70 text-[11px] font-black uppercase tracking-widest rounded-lg hover:bg-white/10 transition-all">
-              <Save size={14} />
+            <button 
+              onClick={handleSave}
+              disabled={loading}
+              className="flex items-center gap-2 px-5 py-2.5 bg-white/5 text-white/70 text-[11px] font-black uppercase tracking-widest rounded-lg hover:bg-white/10 transition-all disabled:opacity-50"
+            >
+              {loading ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
               Save Draft
             </button>
             <button 
