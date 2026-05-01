@@ -1,9 +1,8 @@
 'use client'
 
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter, Link } from '@/navigation'
-import { Send, Loader2, Camera, Check, Globe, Layout, ChevronLeft } from 'lucide-react'
-
+import { Send, Loader2, Camera, Check, Globe, Layout, ChevronLeft, Undo, Redo, Save, Terminal } from 'lucide-react'
 import { useTranslations, useLocale } from 'next-intl'
 import RestaurantTemplate from '@/components/templates/RestaurantTemplate'
 import SalonTemplate from '@/components/templates/SalonTemplate'
@@ -11,171 +10,135 @@ import DealershipTemplate from '@/components/templates/DealershipTemplate'
 
 type Industry = 'restaurant' | 'salon' | 'dealership'
 
-const QUESTIONS: Record<Industry, any[]> = {
-  restaurant: [
-    { id: 'businessName', question: "What is the name of your restaurant?", type: 'text' },
-    { id: 'tagline', question: "What's the tagline or vibe? (e.g. Authentic Ethiopian Flavors)", type: 'text' },
-    { id: 'cuisineType', question: "What type of cuisine do you serve?", type: 'choice', choices: ['Ethiopian', 'Eritrean', 'East African Fusion', 'Other'] },
-    { id: 'city', question: "Which city and neighborhood are you in?", type: 'text' },
-    { id: 'address', question: "What is your full street address?", type: 'text' },
-    { id: 'phone', question: "What's your phone number?", type: 'text' },
-    { id: 'hours', question: "What are your opening hours?", type: 'text' },
-    { id: 'menuItems', question: "Tell me about your menu. Give me at least 3 items (Name, Description, Price).", type: 'text' }, // Simple for now, can be improved
-    { id: 'photos', question: "Let's add some photos! Upload your hero image (front or main dish).", type: 'image' },
-    { id: 'bookingMethod', question: "How should customers book a table?", type: 'choice', choices: ['Phone call', 'Walk-in only', 'Online form'] },
-    { id: 'languages', question: "Which languages should your site support?", type: 'choice', choices: ['English only', 'English + Amharic', 'English + Arabic', 'All languages'], multiple: true },
-  ],
-  salon: [
-    { id: 'businessName', question: "What is the name of your salon?", type: 'text' },
-    { id: 'specialty', question: "What's your specialty?", type: 'choice', choices: ['Natural hair', 'Braiding', 'Locs', 'Full service', 'Other'] },
-    { id: 'city', question: "Which city and neighborhood are you in?", type: 'text' },
-    { id: 'address', question: "What is your full street address?", type: 'text' },
-    { id: 'phone', question: "What's your phone number?", type: 'text' },
-    { id: 'hours', question: "What are your opening hours?", type: 'text' },
-    { id: 'services', question: "List some of your services and prices.", type: 'text' },
-    { id: 'stylists', question: "Who are your top stylists?", type: 'text' },
-    { id: 'photos', question: "Upload a photo of your salon or a top style.", type: 'image' },
-    { id: 'bookingMethod', question: "How do you take bookings?", type: 'choice', choices: ['Phone call', 'Booksy', 'Square Appointments', 'Online form'] },
-    { id: 'languages', question: "Which languages do you need?", type: 'choice', choices: ['English only', 'English + Amharic', 'All languages'], multiple: true },
-  ],
-  dealership: [
-    { id: 'businessName', question: "What is the name of your dealership?", type: 'text' },
-    { id: 'dealershipType', question: "What kind of cars do you sell?", type: 'choice', choices: ['New cars', 'Used cars', 'Both', 'Specialty/Luxury'] },
-    { id: 'city', question: "Which city and neighborhood are you in?", type: 'text' },
-    { id: 'address', question: "What is your full street address?", type: 'text' },
-    { id: 'phone', question: "What's your phone number?", type: 'text' },
-    { id: 'hours', question: "What are your opening hours?", type: 'text' },
-    { id: 'inventory', question: "List some of your current inventory (Make, Model, Year, Price).", type: 'text' },
-    { id: 'financingOptions', question: "Do you offer financing?", type: 'choice', choices: ['Yes', 'No', 'Third party'] },
-    { id: 'photos', question: "Upload a photo of your showroom or a lead car.", type: 'image' },
-    { id: 'languages', question: "Languages for your site?", type: 'choice', choices: ['English only', 'English + Amharic', 'All languages'], multiple: true },
-  ]
-}
-
 export default function IndustryBuilder({ params }: { params: { industry: string } }) {
   const industry = params.industry as Industry
   const router = useRouter()
   const locale = useLocale()
-  
-  const [step, setStep] = useState(0)
-  const [messages, setMessages] = useState<{role: 'assistant' | 'user', content: string}[]>([])
+  const tBuilder = useTranslations('builder')
+
+  const [siteId, setSiteId] = useState<string | null>(null)
+  const [messages, setMessages] = useState<{role: 'assistant' | 'user' | 'system', content: string}[]>([])
   const [input, setInput] = useState('')
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [isPublishing, setIsPublishing] = useState(false)
+  const [agentStatus, setAgentStatus] = useState<string>('')
   
   const [siteData, setSiteData] = useState<any>({
     templateType: industry,
     businessName: '',
     tagline: '',
-    cuisineType: '',
-    address: '',
-    city: '',
-    phone: '',
-    hours: '',
-    menuItems: [],
-    services: [],
-    stylists: [],
-    inventory: [],
-    photos: [],
-    bookingMethod: '',
+    theme: {
+      primaryColor: industry === 'restaurant' ? '#B5780A' : industry === 'dealership' ? '#FF4D00' : '#E63946',
+      backgroundColor: '#0A0F1C',
+      fontFamily: 'sans-serif'
+    },
     languages: ['English'],
     published: false
   })
 
+  const [history, setHistory] = useState<any[]>([])
+  const [historyIndex, setHistoryIndex] = useState(-1)
+
   const chatEndRef = useRef<HTMLDivElement>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    async function loadExisting() {
+    async function init() {
       try {
         const res = await fetch(`/api/site?industry=${industry}`)
         const data = await res.json()
         if (data.site) {
+          setSiteId(data.site.id)
           setSiteData(data.site.site_data)
-          // If already has data, maybe move to a later step or just greet
           const greeting = locale === 'en' 
-            ? `Welcome back! I've loaded your ${industry} data. What would you like to update?`
-            : `እንኳን ደህና መጡ! የእርስዎን ${industry} መረጃ ጭኛለሁ። ምን ማስተካከል ይፈልጋሉ?`;
+            ? `Welcome back to Zemen Agent! I'm ready to help you edit your ${industry} site. What can I do for you today?`
+            : `እንኳን ደህና መጡ! ድረ-ገጽዎን ለማስተካከል ዝግጁ ነኝ። ምን ላድርግልዎ?`;
           setMessages([{ role: 'assistant', content: greeting }])
         } else {
-          // Start fresh
-          const firstQuestion = QUESTIONS[industry][0].question
+          // Create a shell site record first? Or just start chat.
           const greeting = locale === 'en' 
-            ? `Welcome! I'm your Zemen AI builder. Let's create your ${industry} website together.`
-            : `እንኳን ደህና መጡ! እኔ የዘመን AI መገንቢያ ነኝ። የ${industry} ድረ-ገጽዎን አብረን እንገንባ።`;
-          setMessages([{ role: 'assistant', content: `${greeting}\n\n${firstQuestion}` }])
+            ? `I'm your Zemen AI Agent. Tell me about your ${industry} and I'll build it for you instantly.`
+            : `እኔ የዘመን AI ወኪል ነኝ። ስለ ${industry}ዎ ይንገሩኝ እና ወዲያውኑ እገነባዋለሁ።`;
+          setMessages([{ role: 'assistant', content: greeting }])
         }
       } catch (e) {
-        console.error("Failed to load existing site", e)
-      } finally {
-        setLoading(false)
+        console.error("Failed to init", e)
       }
     }
-    loadExisting()
+    init()
   }, [industry, locale])
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  const handleNextStep = async (answer: string) => {
-    if (!answer.trim() && QUESTIONS[industry][step].type !== 'image') return
-    
-    const currentQuestion = QUESTIONS[industry][step]
-    
-    // Update site data based on current question ID
-    let updatedData = { ...siteData }
-    const fieldId = currentQuestion.id
+  const handleSendMessage = async () => {
+    if (!input.trim() || loading) return
 
-    if (fieldId === 'menuItems') {
-      updatedData.menuItems = [{ name: 'Signature Dish', description: answer, price: '15' }]
-    } else if (fieldId === 'services') {
-      updatedData.services = [{ name: 'Premium Service', price: '50' }]
-    } else if (fieldId === 'inventory') {
-      updatedData.inventory = [{ make: 'Sample', model: 'Vehicle', year: '2024', price: '25000', mileage: '0', photo: '' }]
-    } else if (fieldId === 'photos') {
-      // Don't overwrite photos array with the success message string
-      // The array was already updated in handleFileUpload
-    } else {
-      updatedData[fieldId] = answer
-    }
-
-    setSiteData(updatedData)
+    const userMessage = input
     setInput('')
+    setMessages(prev => [...prev, { role: 'user', content: userMessage }])
+    setLoading(true)
 
-    // Move to next question or finish
-    if (step < QUESTIONS[industry].length - 1) {
-      const nextStep = step + 1
-      setStep(nextStep)
-      const nextQuestion = QUESTIONS[industry][nextStep]
-      setMessages(prev => [...prev, { role: 'user', content: answer }, { role: 'assistant', content: nextQuestion.question }])
-    } else {
-      setMessages(prev => [...prev, { role: 'user', content: answer }, { role: 'assistant', content: "Great! Your site is ready for preview. You can click 'Publish' to go live!" }])
+    try {
+      const response = await fetch(`/api/agent/stream?message=${encodeURIComponent(userMessage)}&siteId=${siteId}&userId=current`, {
+        method: 'GET',
+      })
+
+      if (!response.body) throw new Error('No response body')
+
+      const reader = response.body.getReader()
+      const decoder = new TextDecoder()
+
+      while (true) {
+        const { value, done } = await reader.read()
+        if (done) break
+
+        const chunk = decoder.decode(value)
+        const lines = chunk.split('\n')
+        
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = JSON.parse(line.substring(6))
+            
+            if (data.status) setAgentStatus(data.status)
+            if (data.message) {
+              setMessages(prev => [...prev, { role: 'assistant', content: data.message }])
+            }
+            if (data.updatedData) {
+              // Add current state to history (React state)
+              setHistory(prev => [...prev.slice(0, historyIndex + 1), siteData])
+              setHistoryIndex(prev => prev + 1)
+              setSiteData(data.updatedData)
+
+              // Save to Supabase History
+              fetch('/api/agent/history/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  siteId,
+                  changeDescription: userMessage,
+                  siteDataSnapshot: data.updatedData
+                })
+              }).catch(e => console.error("Failed to save history", e))
+            }
+            if (data.complete) setLoading(false)
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Agent stream failed', err)
+      setMessages(prev => [...prev, { role: 'system', content: 'Agent connection lost. Retrying...' }])
+    } finally {
+      setLoading(false)
+      setAgentStatus('')
     }
   }
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-
-    setLoading(true)
-    const formData = new FormData()
-    formData.append('file', file)
-
-    try {
-      const res = await fetch('/api/site/upload', {
-        method: 'POST',
-        body: formData
-      })
-      const data = await res.json()
-      if (data.url) {
-        setSiteData(prev => ({ ...prev, photos: [...prev.photos, data.url] }))
-        handleNextStep("Image uploaded successfully!")
-      }
-    } catch (err) {
-      console.error('Upload failed', err)
-    } finally {
-      setLoading(false)
+  const handleUndo = () => {
+    if (historyIndex >= 0) {
+      const prevState = history[historyIndex]
+      setSiteData(prevState)
+      setHistoryIndex(prev => prev - 1)
     }
   }
 
@@ -185,10 +148,7 @@ export default function IndustryBuilder({ params }: { params: { industry: string
       const res = await fetch('/api/site', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...siteData,
-          published: true
-        })
+        body: JSON.stringify({ ...siteData, published: true })
       })
       const data = await res.json()
       if (data.success) {
@@ -201,30 +161,44 @@ export default function IndustryBuilder({ params }: { params: { industry: string
     }
   }
 
-  const tBuilder = useTranslations('builder')
-  const currentQ = QUESTIONS[industry][step]
-
   return (
     <div className="flex h-screen bg-[#0A0F1C] overflow-hidden pt-[90px]">
-      {/* LEFT: Chat Builder */}
-      <div className="w-[400px] flex-shrink-0 flex flex-col bg-[#0A0F1C] border-r border-white/5">
+      {/* LEFT: Agent Chat Interface */}
+      <div className="w-[450px] flex-shrink-0 flex flex-col bg-[#0A0F1C] border-r border-white/5">
         <div className="p-6 border-b border-white/5 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/dashboard" className="text-white/50 hover:text-white">
               <ChevronLeft size={20} />
             </Link>
-            <h2 className="text-sm font-bold uppercase tracking-widest text-[#B5780A]">{tBuilder('title')}</h2>
+            <div>
+              <h2 className="text-sm font-bold uppercase tracking-widest text-[#B5780A]">Zemen Agent</h2>
+              <div className="flex items-center gap-2 mt-1">
+                <div className={`w-1.5 h-1.5 rounded-full ${loading ? 'bg-yellow-500 animate-pulse' : 'bg-green-500'}`} />
+                <span className="text-[10px] text-white/40 uppercase font-black tracking-widest">
+                  {loading ? agentStatus || 'Processing...' : 'Systems Ready'}
+                </span>
+              </div>
+            </div>
           </div>
-          <span className="text-[10px] bg-white/5 px-2 py-1 rounded text-white/40 uppercase font-bold tracking-widest">
-            {step + 1} / {QUESTIONS[industry].length}
-          </span>
+          <div className="flex items-center gap-2">
+             <button onClick={handleUndo} disabled={historyIndex < 0} className="p-2 bg-white/5 rounded-lg text-white/40 hover:text-white disabled:opacity-20 transition-all">
+                <Undo size={16} />
+             </button>
+             <button className="p-2 bg-white/5 rounded-lg text-white/40 hover:text-white disabled:opacity-20 transition-all">
+                <Redo size={16} />
+             </button>
+          </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide">
           {messages.map((m, i) => (
             <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
               <div className={`max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed ${
-                m.role === 'user' ? 'bg-[#9B1C1C] text-white rounded-tr-none' : 'bg-white/5 text-white/90 border border-white/5 rounded-tl-none'
+                m.role === 'user' 
+                ? 'bg-[#B5780A] text-white rounded-tr-none shadow-xl shadow-yellow-900/10' 
+                : m.role === 'system'
+                ? 'bg-red-900/20 text-red-400 border border-red-900/30 w-full text-center italic text-xs'
+                : 'bg-white/5 text-white/90 border border-white/5 rounded-tl-none'
               }`}>
                 {m.content}
               </div>
@@ -232,8 +206,9 @@ export default function IndustryBuilder({ params }: { params: { industry: string
           ))}
           {loading && (
             <div className="flex justify-start">
-              <div className="bg-white/5 p-4 rounded-2xl animate-pulse">
-                <Loader2 size={16} className="animate-spin text-[#B5780A]" />
+              <div className="bg-white/5 p-4 rounded-2xl flex items-center gap-3 border border-white/5">
+                <Loader2 size={14} className="animate-spin text-[#B5780A]" />
+                <span className="text-xs text-white/40 font-mono italic">{agentStatus}...</span>
               </div>
             </div>
           )}
@@ -241,94 +216,82 @@ export default function IndustryBuilder({ params }: { params: { industry: string
         </div>
 
         <div className="p-6 bg-[#0A0F1C] border-t border-white/5">
-          {/* Quick Replies / Choices */}
-          {currentQ.type === 'choice' && (
-            <div className="grid grid-cols-2 gap-2 mb-4">
-              {currentQ.choices.map((choice: string) => (
-                <button
-                  key={choice}
-                  onClick={() => handleNextStep(choice)}
-                  className="p-3 bg-white/5 border border-white/10 rounded-lg text-xs font-bold uppercase tracking-wider text-white hover:bg-[#B5780A] hover:border-[#B5780A] transition-all"
-                >
-                  {choice}
-                </button>
-              ))}
+          <div className="relative flex items-center group">
+            <div className="absolute left-4 text-white/20 group-focus-within:text-[#B5780A] transition-colors">
+               <Terminal size={18} />
             </div>
-          )}
-
-          {/* Image Upload Trigger */}
-          {currentQ.type === 'image' && (
-            <div className="mb-4">
-              <input type="file" ref={fileInputRef} onChange={handleFileUpload} className="hidden" accept="image/*" />
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="w-full p-4 bg-white/10 border-2 border-dashed border-white/20 rounded-xl text-white flex flex-col items-center gap-2 hover:border-[#B5780A] hover:text-[#B5780A] transition-all"
-              >
-                <Camera size={24} />
-                <span className="text-xs font-bold uppercase tracking-widest">{tBuilder('clickUpload')}</span>
-              </button>
-            </div>
-          )}
-
-          {/* Text Input */}
-          {currentQ.type === 'text' && (
-            <div className="relative flex items-center">
-              <input
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleNextStep(input)}
-                placeholder={tBuilder('placeholder')}
-                className="w-full pl-4 pr-12 py-4 bg-white/5 border border-white/10 rounded-xl text-white text-sm outline-none focus:border-[#B5780A] transition-all"
-              />
-              <button 
-                onClick={() => handleNextStep(input)}
-                className="absolute right-2 p-2 bg-[#B5780A] text-white rounded-lg hover:scale-105 transition-transform"
-              >
-                <Send size={18} />
-              </button>
-            </div>
-          )}
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              placeholder="Ask the agent to change anything..."
+              className="w-full pl-12 pr-12 py-5 bg-white/5 border border-white/10 rounded-2xl text-white text-sm outline-none focus:border-[#B5780A] focus:bg-white/10 transition-all shadow-inner"
+            />
+            <button 
+              onClick={handleSendMessage}
+              disabled={loading}
+              className="absolute right-3 p-2.5 bg-[#B5780A] text-white rounded-xl hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:grayscale shadow-lg shadow-yellow-900/20"
+            >
+              <Send size={18} />
+            </button>
+          </div>
+          <p className="mt-4 text-[10px] text-white/20 text-center uppercase font-bold tracking-widest">
+            Try: "Make it look more luxurious" or "Add a team section"
+          </p>
         </div>
       </div>
 
       {/* RIGHT: Live Preview Screen */}
-      <div className="flex-1 flex flex-col bg-black">
-        <div className="p-4 bg-white/5 flex justify-between items-center px-8 border-b border-white/5">
-          <div className="flex items-center gap-3">
-             <div className="flex gap-1">
-                <div className="w-2 h-2 rounded-full bg-red-500/50" />
-                <div className="w-2 h-2 rounded-full bg-yellow-500/50" />
-                <div className="w-2 h-2 rounded-full bg-green-500/50" />
+      <div className="flex-1 flex flex-col bg-black relative">
+        <div className="p-4 bg-white/5 flex justify-between items-center px-8 border-b border-white/5 backdrop-blur-md">
+          <div className="flex items-center gap-6">
+             <div className="flex gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
+                <div className="w-2.5 h-2.5 rounded-full bg-[#FEBC2E]" />
+                <div className="w-2.5 h-2.5 rounded-full bg-[#28C840]" />
              </div>
-             <div className="bg-white/10 px-4 py-1.5 rounded-full text-[10px] text-white/50 font-mono tracking-tighter">
-                zemenco-platform-hxg7.vercel.app/site/{siteData.businessName?.toLowerCase().replace(/\s+/g, '-') || 'preview'}
+             <div className="bg-black/40 border border-white/5 px-6 py-2 rounded-full text-[10px] text-white/50 font-mono tracking-tighter flex items-center gap-3">
+                <Globe size={10} />
+                zemenco.com/preview/{siteData.businessName?.toLowerCase().replace(/\s+/g, '-') || 'site'}
              </div>
           </div>
-          <button 
-            onClick={handlePublish}
-            disabled={isPublishing || step < QUESTIONS[industry].length - 1}
-            className="flex items-center gap-2 px-6 py-2.5 bg-[#1F6B3A] text-white text-[11px] font-black uppercase tracking-widest rounded-lg hover:bg-[#2e9e56] disabled:opacity-30 disabled:grayscale transition-all"
-          >
-            {isPublishing ? <Loader2 size={14} className="animate-spin" /> : <Globe size={14} />}
-            {isPublishing ? tBuilder('publishing') : tBuilder('publish')}
-          </button>
+          <div className="flex items-center gap-4">
+            <button className="flex items-center gap-2 px-5 py-2.5 bg-white/5 text-white/70 text-[11px] font-black uppercase tracking-widest rounded-lg hover:bg-white/10 transition-all">
+              <Save size={14} />
+              Save Draft
+            </button>
+            <button 
+              onClick={handlePublish}
+              disabled={isPublishing || !siteData.businessName}
+              className="flex items-center gap-2 px-6 py-2.5 bg-[#1F6B3A] text-white text-[11px] font-black uppercase tracking-widest rounded-lg hover:bg-[#2e9e56] disabled:opacity-30 disabled:grayscale transition-all shadow-lg shadow-green-900/20"
+            >
+              {isPublishing ? <Loader2 size={14} className="animate-spin" /> : <Globe size={14} />}
+              {isPublishing ? 'Publishing...' : 'Go Live'}
+            </button>
+          </div>
         </div>
         
-        <div className="flex-1 overflow-y-auto bg-white m-4 rounded-xl shadow-2xl relative">
+        <div className="flex-1 overflow-y-auto bg-white m-6 rounded-2xl shadow-[0_0_100px_rgba(0,0,0,0.5)] relative border border-white/5">
           {industry === 'restaurant' && <RestaurantTemplate data={siteData} />}
           {industry === 'salon' && <SalonTemplate data={siteData} />}
           {industry === 'dealership' && <DealershipTemplate data={siteData} />}
           
           {/* Overlay if not started */}
-          {step === 0 && !siteData.businessName && (
+          {!siteData.businessName && (
             <div className="absolute inset-0 bg-white flex flex-col items-center justify-center text-center p-20">
-               <div className="w-20 h-20 bg-gray-50 rounded-3xl flex items-center justify-center mb-6 animate-bounce">
+               <div className="w-24 h-24 bg-gray-50 rounded-[2.5rem] flex items-center justify-center mb-8 animate-bounce shadow-xl">
                   <Layout size={40} className="text-gray-300" />
                </div>
-               <h3 className="text-2xl font-black uppercase tracking-tighter text-gray-300">Live Preview Container</h3>
-               <p className="text-gray-400 mt-2 max-w-xs uppercase text-[10px] font-bold tracking-[0.2em]">Start chatting to see your site come to life here.</p>
+               <h3 className="text-3xl font-black uppercase tracking-tighter text-gray-900">Digital Canvas Ready</h3>
+               <p className="text-gray-400 mt-4 max-w-xs uppercase text-[10px] font-black tracking-[0.3em] leading-relaxed">
+                 Tell the agent about your vision on the left to begin the architectural generation.
+               </p>
             </div>
+          )}
+
+          {loading && (
+            <div className="absolute inset-0 bg-black/10 backdrop-blur-[1px] pointer-events-none transition-all" />
           )}
         </div>
       </div>

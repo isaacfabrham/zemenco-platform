@@ -177,15 +177,24 @@ export default function DashboardPage() {
                     </div>
                   )}
                 </div>
-                <div className="flex gap-3 w-full md:w-auto">
-                  <Link href={`/build/${site.template_type}`} className="flex-1 md:flex-none px-6 py-3 bg-gray-100 text-[#0A0F1C] font-bold uppercase text-[10px] tracking-widest rounded-lg hover:bg-gray-200 transition-colors text-center">
-                    {t('projects.edit')}
-                  </Link>
-                  <Link href={`/site/${site.slug}`} target="_blank" className="flex-1 md:flex-none px-6 py-3 bg-[#0A0F1C] text-white font-bold uppercase text-[10px] tracking-widest rounded-lg hover:bg-[#B5780A] transition-colors text-center flex items-center justify-center gap-2">
-                    {t('projects.visit')} <ExternalLink size={12} />
-                  </Link>
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    <Link href={`/build/${site.template_type}`} className="px-6 py-3 bg-gray-100 text-[#0A0F1C] font-bold uppercase text-[10px] tracking-widest rounded-lg hover:bg-gray-200 transition-colors text-center">
+                      {t('projects.edit')}
+                    </Link>
+                    <Link href={`/site/${site.slug}`} target="_blank" className="px-6 py-3 bg-[#0A0F1C] text-white font-bold uppercase text-[10px] tracking-widest rounded-lg hover:bg-[#B5780A] transition-colors text-center flex items-center justify-center gap-2">
+                      {t('projects.visit')} <ExternalLink size={12} />
+                    </Link>
+                    <button 
+                      onClick={() => {
+                        const win = window.open(`/api/agent/history?siteId=${site.id}`, '_blank');
+                        // In a real app, this would open a modal
+                      }}
+                      className="px-6 py-3 bg-white border border-gray-200 text-gray-500 font-bold uppercase text-[10px] tracking-widest rounded-lg hover:border-[#B5780A] hover:text-[#B5780A] transition-colors flex items-center gap-2"
+                    >
+                      <Clock size={12} /> History
+                    </button>
+                  </div>
                 </div>
-              </div>
             ))
           )}
         </div>
