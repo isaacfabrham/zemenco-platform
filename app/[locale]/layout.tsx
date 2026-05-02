@@ -4,6 +4,7 @@ import "../globals.css";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import ChatbotWrapper from "@/components/ChatbotWrapper";
+import ErrorBoundaryWrapper from "@/components/ErrorBoundaryWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -45,9 +46,11 @@ export default async function RootLayout({
     <html lang={locale} dir={dir}>
       <body className={inter.className}>
         <NextIntlClientProvider messages={messages} locale={locale}>
-          <div className="noise-overlay" />
-          {children}
-          <ChatbotWrapper />
+          <ErrorBoundaryWrapper>
+            <div className="noise-overlay" />
+            {children}
+            <ChatbotWrapper />
+          </ErrorBoundaryWrapper>
         </NextIntlClientProvider>
       </body>
     </html>

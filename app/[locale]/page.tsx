@@ -185,7 +185,7 @@ export default function Home() {
       <footer className="bg-bg-dark text-bg-white py-20 text-center reveal active">
         <div className="container mx-auto px-10 max-w-[1400px]">
           <div className="font-extrabold text-2xl tracking-tighter mb-10 inline-block bg-white text-bg-dark px-4 py-2 rounded">ZEMEN CO.</div>
-          <div className="text-sm text-white/40">
+          <div className="text-sm text-white/40" suppressHydrationWarning>
             © {new Date().getFullYear()} Zemen Co. Premium Digital Platforms. {tFooter('rights')}
           </div>
         </div>

@@ -166,7 +166,7 @@ export default function DashboardPage() {
                     </span>
                   </div>
                   <div className="flex items-center gap-4 text-gray-400 text-xs font-medium">
-                    <span className="flex items-center gap-1"><Clock size={14} /> {new Date(site.updated_at).toLocaleDateString()}</span>
+                    <span className="flex items-center gap-1" suppressHydrationWarning><Clock size={14} /> {new Date(site.updated_at).toLocaleDateString()}</span>
                     <span className="uppercase text-[10px] font-bold tracking-widest text-[#B5780A]">{site.template_type}</span>
                   </div>
                   
