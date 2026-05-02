@@ -29,9 +29,9 @@ export default function Home() {
             <div className="font-extrabold text-xl tracking-tighter">ZEMEN CO.</div>
           </Link>
           <nav className="hidden md:flex items-center gap-12">
-            <Link href="#expertise" className="text-sm font-semibold text-text-muted uppercase tracking-widest hover:text-text-main transition-colors">{tNav('expertise')}</Link>
-            <Link href="#pricing" className="text-sm font-semibold text-text-muted uppercase tracking-widest hover:text-text-main transition-colors">{tNav('pricing')}</Link>
-            <Link href="#reviews" className="text-sm font-semibold text-text-muted uppercase tracking-widest hover:text-text-main transition-colors">{tNav('reviews')}</Link>
+            <Link href="#expertise" className="text-sm font-bold text-text-main/70 uppercase tracking-widest hover:text-text-main transition-colors">{tNav('expertise')}</Link>
+            <Link href="#pricing" className="text-sm font-bold text-text-main/70 uppercase tracking-widest hover:text-text-main transition-colors">{tNav('pricing')}</Link>
+            <Link href="#reviews" className="text-sm font-bold text-text-main/70 uppercase tracking-widest hover:text-text-main transition-colors">{tNav('reviews')}</Link>
           </nav>
           <div className="flex items-center gap-6">
             <select 
@@ -83,16 +83,16 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {[
-              { step: '1', title: tProcess('step1.title'), desc: tProcess('step1.desc'), color: 'bg-brand-green' },
-              { step: '2', title: tProcess('step2.title'), desc: tProcess('step2.desc'), color: 'bg-brand-gold' },
-              { step: '3', title: tProcess('step3.title'), desc: tProcess('step3.desc'), color: 'bg-brand-red' }
+              { step: '1', title: tProcess('step1.title'), desc: tProcess('step1.desc'), color: 'bg-brand-teal', shadow: 'shadow-teal-900/20' },
+              { step: '2', title: tProcess('step2.title'), desc: tProcess('step2.desc'), color: 'bg-brand-gold', shadow: 'shadow-yellow-900/20' },
+              { step: '3', title: tProcess('step3.title'), desc: tProcess('step3.desc'), color: 'bg-brand-red', shadow: 'shadow-red-900/20' }
             ].map((item, i) => (
               <div key={i} className={`text-center p-10 card-premium reveal active delay-${(i + 1) * 100}`}>
-                <div className={`w-16 h-16 ${item.color} text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg shadow-${item.color.split('-')[1]}/20`}>
+                <div className={`w-16 h-16 ${item.color} text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg ${item.shadow}`}>
                   {item.step}
                 </div>
-                <h3 className="text-2xl font-bold mb-4">{item.title}</h3>
-                <p className="text-white/70 text-lg">{item.desc}</p>
+                <h3 className="text-2xl font-bold mb-4 text-text-main">{item.title}</h3>
+                <p className="text-text-muted text-lg">{item.desc}</p>
               </div>
             ))}
           </div>

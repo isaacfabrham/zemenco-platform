@@ -14,6 +14,7 @@ const config: Config = {
           teal: "#1D9E75",
           gold: "#B5780A",
           red: "#9B1C1C",
+          green: "#1F6B3A",
         },
         bg: {
           surface: "#FAFAFA",
