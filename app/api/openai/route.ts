@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server'
-import Anthropic from '@anthropic-ai/sdk'
+import OpenAI from 'openai'
 import { createClient } from '@/utils/supabase/server'
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || 'dummy-key-to-prevent-build-crash',
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY || 'dummy-key',
 })
 
 export async function POST(req: Request) {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return NextResponse.json({ error: 'ANTHROPIC_API_KEY is not configured' }, { status: 500 })
+  if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'dummy-key') {
+    return NextResponse.json({ error: 'OPENAI_API_KEY is not configured' }, { status: 500 })
   }
   try {
     const supabase = createClient()
@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     // In production, we might want to add rate limiting here.
     const isPublicChat = !user; 
 
-    const { messages, systemPrompt } = await req.json()
+    const { messages, locale } = await req.json()
 
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json({ error: 'Invalid messages array' }, { status: 400 })
@@ -93,16 +93,21 @@ RESPONSE RULES:
 - If unsure: direct to support email
 - Always end with a next step`;
 
-    const apiPromise = anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20240620',
-      max_tokens: 4000,
-      system: ZEMEN_SYSTEM_PROMPT,
-      messages: messages,
+    const openAiMessages = [
+      { role: 'system', content: ZEMEN_SYSTEM_PROMPT },
+      ...messages
+    ]
+
+    const apiPromise = openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: openAiMessages as any,
+      max_tokens: 1000,
+      temperature: 0.7,
     })
 
     const response: any = await Promise.race([apiPromise, timeoutPromise])
 
-    return NextResponse.json({ result: { text: response.content[0].text } })
+    return NextResponse.json({ result: { text: response.choices[0].message.content } })
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 })
   }

@@ -52,21 +52,14 @@ export default function Chatbot() {
     setShowQuickReplies(false)
 
     try {
-      const response = await fetch('/api/claude', {
+      const response = await fetch('/api/openai', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: [...messages, userMessage]
-            .filter((m, idx, arr) => {
-              // Claude requires messages to alternate and START with a user message.
-              // If the first message is an assistant greeting, we skip it for the API.
-              if (idx === 0 && m.role === 'assistant') return false;
-              return true;
-            })
-            .map(m => ({
-              role: m.role,
-              content: m.content
-            })),
+          messages: [...messages, userMessage].map(m => ({
+            role: m.role,
+            content: m.content
+          })),
           locale
         })
       })
