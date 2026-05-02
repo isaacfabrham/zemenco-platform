@@ -82,7 +82,7 @@ export default function SignupPage() {
             {t('tagline')}
           </div>
           <h1 className="text-4xl font-bold mb-2">{t('title')}</h1>
-          <p className="text-white/60 text-lg">{t('subtitle')}</p>
+          <p className="text-white/80 text-lg">{t('subtitle')}</p>
         </div>
 
         <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-8 md:p-10 rounded-3xl shadow-2xl">
@@ -91,7 +91,7 @@ export default function SignupPage() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               className={`mb-8 p-4 rounded-xl text-sm font-medium border ${
-                success ? 'bg-[#1D9E75]/10 border-[#1D9E75]/20 text-[#1D9E75]' : 'bg-red-500/10 border-red-500/20 text-red-400'
+                success ? 'bg-[#1D9E75]/20 border-[#1D9E75]/30 text-[#1D9E75]' : 'bg-red-500/20 border-red-500/30 text-red-200'
               }`}
             >
               {message}
@@ -102,55 +102,55 @@ export default function SignupPage() {
             <form onSubmit={handleSignup} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 mb-2 ml-1">{t('firstName')}</label>
+                  <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 mb-2 ml-1">{t('firstName')}</label>
                   <input 
                     type="text" 
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     placeholder="John"
-                    className="w-full p-4 bg-white/5 border border-white/10 rounded-2xl outline-none focus:border-[#1D9E75] focus:bg-white/10 transition-all text-white placeholder:text-white/20"
+                    className="w-full p-4 bg-white/5 border border-white/10 rounded-2xl outline-none focus:border-[#1D9E75] focus:bg-white/10 transition-all text-white placeholder:text-white/50"
                     required 
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 mb-2 ml-1">{t('lastName')}</label>
+                  <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 mb-2 ml-1">{t('lastName')}</label>
                   <input 
                     type="text" 
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     placeholder="Doe"
-                    className="w-full p-4 bg-white/5 border border-white/10 rounded-2xl outline-none focus:border-[#1D9E75] focus:bg-white/10 transition-all text-white placeholder:text-white/20"
+                    className="w-full p-4 bg-white/5 border border-white/10 rounded-2xl outline-none focus:border-[#1D9E75] focus:bg-white/10 transition-all text-white placeholder:text-white/50"
                     required 
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 mb-2 ml-1">{t('email')}</label>
+                <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 mb-2 ml-1">{t('email')}</label>
                 <input 
                   type="email" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="email@example.com"
-                  className="w-full p-4 bg-white/5 border border-white/10 rounded-2xl outline-none focus:border-[#1D9E75] focus:bg-white/10 transition-all text-white placeholder:text-white/20"
+                  className="w-full p-4 bg-white/5 border border-white/10 rounded-2xl outline-none focus:border-[#1D9E75] focus:bg-white/10 transition-all text-white placeholder:text-white/50"
                   required 
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 mb-2 ml-1">{t('password')}</label>
+                  <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 mb-2 ml-1">{t('password')}</label>
                   <input 
                     type="password" 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full p-4 bg-white/5 border border-white/10 rounded-2xl outline-none focus:border-[#1D9E75] focus:bg-white/10 transition-all text-white placeholder:text-white/20"
+                    className="w-full p-4 bg-white/5 border border-white/10 rounded-2xl outline-none focus:border-[#1D9E75] focus:bg-white/10 transition-all text-white placeholder:text-white/50"
                     required 
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 mb-2 ml-1">{t('industry')}</label>
+                  <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 mb-2 ml-1">{t('industry')}</label>
                   <div className="relative">
                     <select 
                       value={industry}
@@ -163,7 +163,7 @@ export default function SignupPage() {
                       <option value="salon" className="bg-[#0F2820]">{t('industries.salon')}</option>
                       <option value="dealership" className="bg-[#0F2820]">{t('industries.dealership')}</option>
                     </select>
-                    <ChevronDown size={18} className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/40" />
+                    <ChevronDown size={18} className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/60" />
                   </div>
                 </div>
               </div>
@@ -207,7 +207,7 @@ export default function SignupPage() {
           )}
         </div>
 
-        <p className="mt-8 text-center text-white/40 text-sm">
+        <p className="mt-8 text-center text-white/60 text-sm">
           {t('haveAccount')} <Link href="/login" className="text-[#1D9E75] font-bold hover:underline ml-1">{t('login')}</Link>
         </p>
       </motion.div>

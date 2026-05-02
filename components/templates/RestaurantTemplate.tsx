@@ -158,7 +158,7 @@ export default function RestaurantTemplate({ data, lang: initialLang = 'en' }: {
                     {item.name}
                     <ChevronRight size={16} className="opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all" />
                   </h3>
-                  <p className="text-gray-400 text-sm leading-relaxed italic">{item.description}</p>
+                  <p className="text-gray-600 text-sm leading-relaxed italic">{item.description}</p>
                 </div>
                 <div className="text-2xl font-black tracking-tighter">${item.price}</div>
               </div>
@@ -247,7 +247,7 @@ export default function RestaurantTemplate({ data, lang: initialLang = 'en' }: {
               </div>
            </div>
         </div>
-        <div className="mt-24 pt-12 border-t border-white/5 text-center text-[10px] font-black uppercase tracking-[0.5em] text-white/10">
+        <div className="mt-24 pt-12 border-t border-white/5 text-center text-[10px] font-black uppercase tracking-[0.5em] text-white/30">
            Designed by Zemen Co. Digital Architecture
         </div>
       </footer>

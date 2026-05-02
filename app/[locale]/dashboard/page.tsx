@@ -63,13 +63,13 @@ export default function DashboardPage() {
           <Link href="/dashboard" className="flex items-center gap-3 text-[#B5780A] font-bold reveal active delay-100">
             <BarChart3 size={20} /> {t('title')}
           </Link>
-          <Link href="/build" className="flex items-center gap-3 text-white/50 hover:text-white transition-colors reveal active delay-200">
+          <Link href="/build" className="flex items-center gap-3 text-white/70 hover:text-white transition-colors reveal active delay-200">
             <Plus size={20} /> {t('newSite')}
           </Link>
-          <Link href="#inbox" className="flex items-center gap-3 text-white/50 hover:text-white transition-colors reveal active delay-300">
+          <Link href="#inbox" className="flex items-center gap-3 text-white/70 hover:text-white transition-colors reveal active delay-300">
             <MessageSquare size={20} /> {t('inbox')}
           </Link>
-          <Link href="#settings" className="flex items-center gap-3 text-white/50 hover:text-white transition-colors reveal active delay-400">
+          <Link href="#settings" className="flex items-center gap-3 text-white/70 hover:text-white transition-colors reveal active delay-400">
             <Settings size={20} /> {t('settings')}
           </Link>
         </nav>
@@ -95,7 +95,7 @@ export default function DashboardPage() {
                 {t('upgrade')}
               </Link>
             ) : (
-              <Link href="/build" className="flex-1 md:flex-none px-8 py-3.5 bg-[#B5780A] text-white font-bold uppercase text-xs tracking-widest rounded-lg shadow-xl shadow-yellow-900/20 hover:bg-yellow-700 transition-all text-center">
+              <Link href="/build" className="flex-1 md:flex-none px-8 py-3.5 bg-[#B5780A] text-[#0A0F1C] font-bold uppercase text-xs tracking-widest rounded-lg shadow-xl shadow-yellow-900/20 hover:bg-yellow-700 transition-all text-center">
                 {t('create')}
               </Link>
             )}
@@ -105,30 +105,30 @@ export default function DashboardPage() {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
           <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm reveal active delay-100">
-            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">{t('stats.visits')}</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">{t('stats.visits')}</p>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-black italic">1,284</span>
-              <span className="text-xs font-bold text-green-500">+12%</span>
+              <span className="text-xs font-bold text-green-600">+12%</span>
             </div>
           </div>
           <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm reveal active delay-200">
-            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">{t('stats.inquiries')}</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">{t('stats.inquiries')}</p>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-black italic">24</span>
-              <span className="text-xs font-bold text-green-500">+5</span>
+              <span className="text-xs font-bold text-green-600">+5</span>
             </div>
           </div>
           <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm reveal active delay-300">
-            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">{t('stats.plan')}</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">{t('stats.plan')}</p>
             <div className="flex items-baseline gap-2">
               <span className="text-xl font-black uppercase text-[#B5780A]">{profile?.plan_type || 'Free'}</span>
             </div>
           </div>
           <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex justify-between items-center reveal active delay-400">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">{t('stats.status')}</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-2">{t('stats.status')}</p>
               <div className="flex items-center gap-2">
-                <div className={`w-2 h-2 rounded-full ${isSubscribed ? 'bg-green-500' : 'bg-red-500'}`} />
+                <div className={`w-2 h-2 rounded-full ${isSubscribed ? 'bg-green-600' : 'bg-red-600'}`} />
                 <span className="text-xs font-black uppercase">{profile?.subscription_status || 'Inactive'}</span>
               </div>
             </div>
@@ -145,7 +145,7 @@ export default function DashboardPage() {
                 <Globe className="text-gray-300" size={32} />
               </div>
               <h3 className="text-xl font-bold uppercase tracking-tight">{t('projects.noSites')}</h3>
-              <p className="text-gray-400 mt-2 mb-8 uppercase text-[10px] font-bold tracking-widest">{t('projects.noSitesDesc')}</p>
+              <p className="text-gray-500 mt-2 mb-8 uppercase text-[10px] font-bold tracking-widest">{t('projects.noSitesDesc')}</p>
               <Link href="/build" className="px-10 py-4 bg-[#0A0F1C] text-white font-bold uppercase text-xs tracking-widest rounded-xl hover:bg-[#B5780A] transition-colors">
                 {t('projects.startBuilding')}
               </Link>
@@ -165,15 +165,15 @@ export default function DashboardPage() {
                       {site.published ? t('projects.published') : t('projects.draft')}
                     </span>
                   </div>
-                  <div className="flex items-center gap-4 text-gray-400 text-xs font-medium">
+                  <div className="flex items-center gap-4 text-gray-500 text-xs font-medium">
                     <span className="flex items-center gap-1" suppressHydrationWarning><Clock size={14} /> {new Date(site.updated_at).toLocaleDateString()}</span>
                     <span className="uppercase text-[10px] font-bold tracking-widest text-[#B5780A]">{site.template_type}</span>
                   </div>
                   
                   {site.published && (
                     <div className="mt-4 flex items-center gap-2 bg-gray-50 p-2 rounded-lg w-fit group">
-                      <span className="text-[10px] text-gray-400 font-mono">zemenco-platform.com/site/{site.slug}</span>
-                      <button className="text-gray-300 hover:text-[#B5780A] transition-colors"><Copy size={12} /></button>
+                      <span className="text-[10px] text-gray-500 font-mono">zemenco-platform.com/site/{site.slug}</span>
+                      <button className="text-gray-400 hover:text-[#B5780A] transition-colors"><Copy size={12} /></button>
                     </div>
                   )}
                 </div>

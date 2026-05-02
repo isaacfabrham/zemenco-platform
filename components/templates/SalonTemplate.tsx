@@ -90,16 +90,16 @@ export default function SalonTemplate({ data, lang: initialLang = 'en' }: { data
           <div className="lg:col-span-4 sticky top-40">
             <span className="text-[#B5780A] font-black tracking-[0.4em] uppercase text-[10px] block mb-6">Our Craft</span>
             <h2 className="text-6xl font-light uppercase tracking-tighter mb-8 leading-tight">Tailored <br/>Treatments</h2>
-            <p className="text-gray-400 text-lg leading-relaxed italic mb-12">
+            <p className="text-gray-600 text-lg leading-relaxed italic mb-12">
               Every appointment is a bespoke journey. We combine heritage techniques with modern science to reveal your most radiant self.
             </p>
             <div className="p-8 bg-white border border-gray-100 rounded-3xl shadow-soft">
                <div className="flex items-center gap-4 mb-4">
                   <Star className="text-[#B5780A] fill-[#B5780A]" size={16} />
-                  <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Client Favorite</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-gray-600">Client Favorite</span>
                </div>
                <h4 className="text-xl font-bold uppercase mb-2">Signature Revive</h4>
-               <p className="text-gray-400 text-xs mb-6 uppercase tracking-widest">Full Treatment • 120 Mins</p>
+               <p className="text-gray-600 text-xs mb-6 uppercase tracking-widest">Full Treatment • 120 Mins</p>
                <button className="w-full py-4 border border-gray-100 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#1A1A1A] hover:text-white transition-all">Book Now</button>
             </div>
           </div>
@@ -224,8 +224,8 @@ export default function SalonTemplate({ data, lang: initialLang = 'en' }: { data
             <button className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center hover:bg-[#B5780A] hover:text-white transition-all"><Calendar size={18} /></button>
           </div>
           <div className="text-center md:text-right">
-             <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2">Legal</p>
-             <p className="text-[10px] text-gray-300 uppercase tracking-widest">© {new Date().getFullYear()} {data.businessName} • Digital by Zemen Co.</p>
+             <p className="text-xs font-bold uppercase tracking-widest text-gray-600 mb-2">Legal</p>
+             <p className="text-[10px] text-gray-500 uppercase tracking-widest">© {new Date().getFullYear()} {data.businessName} • Digital by Zemen Co.</p>
           </div>
         </div>
       </footer>

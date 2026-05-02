@@ -61,7 +61,7 @@ export default function Home() {
           <div className="mask-wrap mb-10">
             <h1 className="text-5xl md:text-[6.5vw] leading-[0.95] font-bold uppercase tracking-tighter mask-inner active">
               <span className="block">{tHero('title1')}</span>
-              <span className="block">{tHero('title2')} <span className="text-brand-gold">{tHero('title3')}</span></span>
+              <span className="block">{tHero('title2')} <span className="text-[#8B5E07]">{tHero('title3')}</span></span>
             </h1>
           </div>
           <p className="text-xl text-text-muted max-w-[700px] leading-relaxed mb-14 reveal active delay-200">
@@ -77,7 +77,7 @@ export default function Home() {
       <section id="expertise" className="bg-bg-dark text-bg-white py-[120px]">
         <div className="container mx-auto px-10 max-w-[1400px]">
           <div className="text-center mb-20">
-            <span className="block text-sm font-semibold text-brand-gold tracking-[0.25em] uppercase mb-4 opacity-80 reveal active">{tProcess('badge')}</span>
+            <span className="block text-sm font-semibold text-[#8B5E07] tracking-[0.25em] uppercase mb-4 reveal active">{tProcess('badge')}</span>
             <h2 className="text-5xl font-bold mb-6 tracking-tighter reveal active delay-100">{tProcess('title')}</h2>
             <p className="text-xl text-white/70 max-w-[600px] mx-auto reveal active delay-200">{tProcess('subtitle')}</p>
           </div>
@@ -103,7 +103,7 @@ export default function Home() {
       <section id="templates" className="bg-bg-surface py-[120px]">
         <div className="container mx-auto px-10 max-w-[1400px]">
           <div className="text-center mb-20">
-            <span className="block text-sm font-semibold text-brand-gold tracking-[0.25em] uppercase mb-4 opacity-80 reveal active">{tTemplates('badge')}</span>
+            <span className="block text-sm font-semibold text-[#8B5E07] tracking-[0.25em] uppercase mb-4 reveal active">{tTemplates('badge')}</span>
             <h2 className="text-5xl font-bold mb-6 tracking-tighter reveal active delay-100">{tTemplates('title')}</h2>
             <p className="text-xl text-text-muted max-w-[600px] mx-auto reveal active delay-200">{tTemplates('subtitle')}</p>
           </div>
@@ -129,7 +129,7 @@ export default function Home() {
       <section id="pricing" className="bg-bg-surface py-[160px]">
         <div className="container mx-auto px-10 max-w-[1400px]">
           <div className="text-center mb-20">
-            <span className="block text-sm font-semibold text-brand-gold tracking-[0.25em] uppercase mb-4 opacity-80 reveal active">{tPricing('badge')}</span>
+            <span className="block text-sm font-semibold text-[#8B5E07] tracking-[0.25em] uppercase mb-4 reveal active">{tPricing('badge')}</span>
             <h2 className="text-5xl font-bold mb-6 tracking-tighter reveal active delay-100">{tPricing('title')}</h2>
             <p className="text-xl text-text-muted max-w-[600px] mx-auto reveal active delay-200">{tPricing('subtitle')}</p>
           </div>
@@ -138,7 +138,7 @@ export default function Home() {
             {/* Starter Plan */}
             <div className="card-premium p-16 shadow-soft hover:shadow-hover flex flex-col reveal active delay-100">
               <h3 className="text-3xl font-bold mb-4">{tPricing('starter.name')}</h3>
-              <div className="text-7xl font-extrabold mb-8 flex items-baseline gap-2 tracking-tighter text-brand-gold">
+              <div className="text-7xl font-extrabold mb-8 flex items-baseline gap-2 tracking-tighter text-[#8B5E07]">
                 {tPricing('starter.price')}<span className="text-xl font-medium text-text-muted tracking-normal">{tPricing('month')}</span>
               </div>
               <p className="text-lg text-text-muted mb-10">{tPricing('starter.desc')}</p>
@@ -161,7 +161,7 @@ export default function Home() {
                 <span className="inline-block px-6 py-2 bg-brand-gold text-white text-xs font-bold uppercase tracking-[0.2em] rounded-full shadow-lg shadow-gold/20">{tPricing('pro.badge')}</span>
               </div>
               <h3 className="text-3xl font-bold mb-4">{tPricing('pro.name')}</h3>
-              <div className="text-7xl font-extrabold mb-8 flex items-baseline gap-2 tracking-tighter text-brand-gold">
+              <div className="text-7xl font-extrabold mb-8 flex items-baseline gap-2 tracking-tighter text-[#8B5E07]">
                 {tPricing('pro.price')}<span className="text-xl font-medium text-text-muted tracking-normal">{tPricing('month')}</span>
               </div>
               <p className="text-lg text-text-muted mb-10">{tPricing('pro.desc')}</p>
@@ -173,7 +173,7 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
-              <Link href="/signup?plan=pro" className="px-12 py-5 bg-brand-gold text-white text-center font-semibold text-lg rounded uppercase hover:bg-brand-dark transition-colors">
+              <Link href="/signup?plan=pro" className="px-12 py-5 bg-brand-gold text-[#0A0F1C] text-center font-semibold text-lg rounded uppercase hover:bg-brand-dark hover:text-white transition-colors">
                 {tPricing('pro.cta')}
               </Link>
             </div>

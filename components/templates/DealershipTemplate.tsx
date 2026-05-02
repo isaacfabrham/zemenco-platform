@@ -115,16 +115,16 @@ export default function DealershipTemplate({ data, lang: initialLang = 'en' }: {
 
         {/* Speed Stats Overlay */}
         <div className="absolute bottom-20 left-0 right-0 px-10 flex justify-between items-end">
-           <div className="hidden md:flex gap-16">
-              <div>
-                 <p className="text-[10px] font-black text-white/30 uppercase tracking-widest mb-2">Inventory</p>
-                 <p className="text-3xl font-black italic tracking-tighter">150+ UNITS</p>
-              </div>
-              <div>
-                 <p className="text-[10px] font-black text-white/30 uppercase tracking-widest mb-2">Service</p>
-                 <p className="text-3xl font-black italic tracking-tighter">EXPERT CARE</p>
-              </div>
-           </div>
+            <div className="hidden md:flex gap-16">
+               <div>
+                  <p className="text-[10px] font-black text-white/50 uppercase tracking-widest mb-2">Inventory</p>
+                  <p className="text-3xl font-black italic tracking-tighter">150+ UNITS</p>
+               </div>
+               <div>
+                  <p className="text-[10px] font-black text-white/50 uppercase tracking-widest mb-2">Service</p>
+                  <p className="text-3xl font-black italic tracking-tighter">EXPERT CARE</p>
+               </div>
+            </div>
            <div className="flex flex-col items-center gap-4 opacity-30">
               <span className="text-[10px] font-black uppercase tracking-[0.4em] rotate-90 origin-bottom mb-4">Launch</span>
               <div className="w-[1px] h-20 bg-white" />
@@ -180,7 +180,7 @@ export default function DealershipTemplate({ data, lang: initialLang = 'en' }: {
               placeholder="Filter by Make, Model, or Year..." 
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="w-full pl-16 pr-6 py-6 bg-white/5 border border-white/10 rounded-sm font-black uppercase text-xs tracking-widest focus:border-[var(--primary)] outline-none transition-all placeholder:text-white/20"
+              className="w-full pl-16 pr-6 py-6 bg-white/5 border border-white/10 rounded-sm font-black uppercase text-xs tracking-widest focus:border-[var(--primary)] outline-none transition-all placeholder:text-white/50"
             />
           </div>
         </div>
@@ -345,8 +345,8 @@ export default function DealershipTemplate({ data, lang: initialLang = 'en' }: {
             ))}
           </div>
           <div className="text-center md:text-right">
-             <p className="text-[10px] font-black text-white/10 uppercase tracking-[0.4em] mb-4">Transmission End</p>
-             <p className="text-[10px] text-white/40 uppercase font-black tracking-widest">
+             <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.4em] mb-4">Transmission End</p>
+             <p className="text-[10px] text-white/60 uppercase font-black tracking-widest">
                © {new Date().getFullYear()} {data.businessName} • Built by Zemen Co. Tactical Digital
              </p>
           </div>

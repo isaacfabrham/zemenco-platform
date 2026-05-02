@@ -116,7 +116,7 @@ export default function LoginPage() {
             {t('tagline')}
           </div>
           <h1 className="text-4xl font-bold mb-2">{t('title')}</h1>
-          <p className="text-white/60 text-lg">{t('subtitle')}</p>
+          <p className="text-white/80 text-lg">{t('subtitle')}</p>
         </div>
 
         <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl">
@@ -124,7 +124,7 @@ export default function LoginPage() {
             <motion.div 
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
-              className="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-sm font-medium"
+              className="mb-6 p-4 bg-red-500/20 border border-red-500/30 text-red-200 rounded-xl text-sm font-medium"
             >
               {errorMessage}
             </motion.div>
@@ -134,7 +134,7 @@ export default function LoginPage() {
             <motion.div 
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
-              className="mb-6 p-4 bg-[#1D9E75]/10 border border-[#1D9E75]/20 text-[#1D9E75] rounded-xl text-sm font-medium"
+              className="mb-6 p-4 bg-[#1D9E75]/20 border border-[#1D9E75]/30 text-[#1D9E75] rounded-xl text-sm font-medium"
             >
               {authStatus === 'success' && !loading ? errorMessage : t('loggingIn')}
             </motion.div>
@@ -142,24 +142,24 @@ export default function LoginPage() {
 
           <form onSubmit={handleLogin} className="space-y-5">
             <div>
-              <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 mb-2 ml-1">{t('email')}</label>
+              <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 mb-2 ml-1">{t('email')}</label>
               <input 
                 type="email" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="email@example.com"
-                className="w-full p-4 bg-white/5 border border-white/10 rounded-2xl outline-none focus:border-[#1D9E75] focus:bg-white/10 transition-all text-white placeholder:text-white/20"
+                className="w-full p-4 bg-white/5 border border-white/10 rounded-2xl outline-none focus:border-[#1D9E75] focus:bg-white/10 transition-all text-white placeholder:text-white/50"
                 required 
               />
             </div>
             <div>
-              <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 mb-2 ml-1">{t('password')}</label>
+              <label className="block text-[10px] font-bold uppercase tracking-[0.2em] text-white/60 mb-2 ml-1">{t('password')}</label>
               <input 
                 type="password" 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full p-4 bg-white/5 border border-white/10 rounded-2xl outline-none focus:border-[#1D9E75] focus:bg-white/10 transition-all text-white placeholder:text-white/20"
+                className="w-full p-4 bg-white/5 border border-white/10 rounded-2xl outline-none focus:border-[#1D9E75] focus:bg-white/10 transition-all text-white placeholder:text-white/50"
                 required 
               />
               <div className="mt-3 text-right">
