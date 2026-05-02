@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import Groq from 'groq-sdk'
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 export async function POST(req: Request) {
   try {
@@ -30,25 +30,24 @@ export async function POST(req: Request) {
       4. Do not mention that you are an AI model. You are the digital representative of ${businessData.businessName}.
     `
 
-    // Use Gemini 1.5 Flash for speed
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
-
-    // Prepare history
-    const chatHistory = messages.slice(0, -1).map((m: any) => ({
-      role: m.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: m.content }]
+    // Format history for Groq
+    const cleanMessages = messages.map((m: any) => ({
+      role: m.role === 'assistant' ? 'assistant' : 'user',
+      content: m.content
     }))
 
-    const chat = model.startChat({
-      history: chatHistory,
-      systemInstruction: systemPrompt
+    const response = await groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        ...cleanMessages
+      ] as any,
+      max_tokens: 1024
     })
+    
+    const reply = response.choices[0]?.message?.content || ''
 
-    const result = await chat.sendMessage(messages[messages.length - 1].content)
-    const response = await result.response
-    const text = response.text()
-
-    return NextResponse.json({ content: text })
+    return NextResponse.json({ content: reply })
   } catch (err: any) {
     console.error('Site chat error:', err)
     return NextResponse.json({ content: "I'm sorry, I'm having trouble thinking right now. Please try again or call us!" }, { status: 500 })

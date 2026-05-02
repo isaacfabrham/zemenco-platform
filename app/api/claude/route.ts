@@ -1,15 +1,10 @@
 import { NextResponse } from 'next/server'
-import OpenAI from 'openai'
+import Groq from 'groq-sdk'
 import { createClient } from '@/utils/supabase/server'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || 'dummy-key',
-})
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 export async function POST(req: Request) {
-  if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'dummy-key') {
-    return NextResponse.json({ error: 'OPENAI_API_KEY is not configured' }, { status: 500 })
-  }
   try {
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
@@ -93,22 +88,27 @@ RESPONSE RULES:
 - If unsure: direct to support email
 - Always end with a next step`;
 
-    const openAiMessages = [
-      { role: 'system', content: ZEMEN_SYSTEM_PROMPT },
-      ...messages
-    ]
+    // Ensure valid roles for Groq
+    const cleanMessages = messages.map((m: any) => ({
+      role: m.role === 'assistant' ? 'assistant' : 'user',
+      content: m.content
+    }))
 
-    const apiPromise = openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: openAiMessages as any,
-      max_tokens: 1000,
-      temperature: 0.7,
+    const apiPromise = groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: ZEMEN_SYSTEM_PROMPT },
+        ...cleanMessages
+      ] as any,
+      max_tokens: 1024,
     })
 
     const response: any = await Promise.race([apiPromise, timeoutPromise])
+    const reply = response.choices[0]?.message?.content || ''
 
-    return NextResponse.json({ result: { text: response.choices[0].message.content } })
+    return NextResponse.json({ result: { text: reply } })
   } catch (err: any) {
+    console.error('Groq API Error:', err)
     return NextResponse.json({ error: err.message }, { status: 500 })
   }
 }

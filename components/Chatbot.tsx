@@ -52,7 +52,7 @@ export default function Chatbot() {
     setShowQuickReplies(false)
 
     try {
-      const response = await fetch('/api/openai', {
+      const response = await fetch('/api/claude', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

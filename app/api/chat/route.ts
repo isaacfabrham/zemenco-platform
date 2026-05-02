@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import Groq from 'groq-sdk'
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 export async function POST(req: Request) {
   try {
@@ -81,27 +81,28 @@ RESPONSE RULES:
 - If unsure: direct to support email
 - Always end with a next step`;
 
-    const model = genAI.getGenerativeModel({ 
-      model: 'gemini-1.5-flash',
-      systemInstruction: `${ZEMEN_SYSTEM_PROMPT} You MUST respond only in ${language}.`
+    const finalSystemPrompt = `${ZEMEN_SYSTEM_PROMPT} You MUST respond only in ${language}.`
+
+    // Filter messages to only include role and content for Groq
+    const cleanMessages = messages.map((m: any) => ({
+      role: m.role === 'assistant' ? 'assistant' : 'user',
+      content: m.content
+    }))
+
+    const response = await groq.chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
+      messages: [
+        { role: 'system', content: finalSystemPrompt },
+        ...cleanMessages
+      ] as any,
+      max_tokens: 1024
     })
+    
+    const reply = response.choices[0]?.message?.content || ''
 
-    // Convert messages to Gemini format
-    const chat = model.startChat({
-      history: messages.slice(0, -1).map((m: any) => ({
-        role: m.role === 'assistant' ? 'model' : 'user',
-        parts: [{ text: m.content }],
-      })),
-    })
-
-    const latestMessage = messages[messages.length - 1].content
-    const result = await chat.sendMessage(latestMessage)
-    const response = await result.response
-    const text = response.text()
-
-    return NextResponse.json({ result: { text } })
+    return NextResponse.json({ result: { text: reply } })
   } catch (err: any) {
-    console.error('Gemini API Error:', err)
+    console.error('Groq API Error:', err)
     return NextResponse.json({ error: err.message }, { status: 500 })
   }
 }
