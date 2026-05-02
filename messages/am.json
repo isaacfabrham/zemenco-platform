@@ -87,7 +87,9 @@
     "publish": "ድረ-ገጹን አትም",
     "publishing": "በመታተም ላይ...",
     "clickUpload": "ምስል ለመጫን እዚህ ይጫኑ",
-    "placeholder": "መልስዎን እዚህ ይጻፉ..."
+    "placeholder": "መልስዎን እዚህ ይጻፉ...",
+    "welcomeBack": "እንኳን ደህና መጡ! ድረ-ገጽዎን ለማስተካከል ዝግጁ ነኝ። ምን ላድርግልዎ?",
+    "startBuilding": "እኔ የዘመን AI ወኪል ነኝ። ስለ {industry}ዎ ይንገሩኝ እና ወዲያውኑ እገነባዋለሁ።"
   },
   "auth": {
     "login": {

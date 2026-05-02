@@ -49,23 +49,16 @@ export default function IndustryBuilder({ params }: { params: { industry: string
         if (data.site) {
           setSiteId(data.site.id)
           setSiteData(data.site.site_data)
-          const greeting = locale === 'en' 
-            ? `Welcome back to Zemen Agent! I'm ready to help you edit your ${industry} site. What can I do for you today?`
-            : `እንኳን ደህና መጡ! ድረ-ገጽዎን ለማስተካከል ዝግጁ ነኝ። ምን ላድርግልዎ?`;
-          setMessages([{ role: 'assistant', content: greeting }])
+          setMessages([{ role: 'assistant', content: tBuilder('welcomeBack', { industry }) }])
         } else {
-          // Create a shell site record first? Or just start chat.
-          const greeting = locale === 'en' 
-            ? `I'm your Zemen AI Agent. Tell me about your ${industry} and I'll build it for you instantly.`
-            : `እኔ የዘመን AI ወኪል ነኝ። ስለ ${industry}ዎ ይንገሩኝ እና ወዲያውኑ እገነባዋለሁ።`;
-          setMessages([{ role: 'assistant', content: greeting }])
+          setMessages([{ role: 'assistant', content: tBuilder('startBuilding', { industry }) }])
         }
       } catch (e) {
         console.error("Failed to init", e)
       }
     }
     init()
-  }, [industry, locale])
+  }, [industry, locale, tBuilder])
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -102,21 +95,25 @@ export default function IndustryBuilder({ params }: { params: { industry: string
             
             if (data.status) setAgentStatus(data.status)
             if (data.message) {
-              setMessages(prev => [...prev, { role: 'assistant', content: data.message }])
+              setMessages(prev => {
+                const last = prev[prev.length - 1]
+                if (last?.role === 'assistant') {
+                  return [...prev.slice(0, -1), { role: 'assistant', content: last.content + data.message }]
+                }
+                return [...prev, { role: 'assistant', content: data.message }]
+              })
             }
             if (data.updatedData) {
-              // Add current state to history (React state)
-              setHistory(prev => [...prev.slice(0, historyIndex + 1), siteData])
-              setHistoryIndex(prev => prev + 1)
               setSiteData(data.updatedData)
-
-              // Save to Supabase History
+              setHistory(prev => [...prev, data.updatedData])
+              setHistoryIndex(prev => prev + 1)
+              
+              // Auto-save history snapshot
               fetch('/api/agent/history/save', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                   siteId,
-                  changeDescription: userMessage,
                   siteDataSnapshot: data.updatedData
                 })
               }).catch(e => console.error("Failed to save history", e))
@@ -148,14 +145,20 @@ export default function IndustryBuilder({ params }: { params: { industry: string
       const res = await fetch('/api/site', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...siteData, published: true })
+        body: JSON.stringify({
+          id: siteId,
+          templateType: industry,
+          businessName: siteData.businessName,
+          published: true,
+          ...siteData
+        })
       })
       const data = await res.json()
       if (data.success) {
-        router.push(`/dashboard?published=true&slug=${data.slug}`)
+        setMessages(prev => [...prev, { role: 'system', content: 'Site published successfully! Visit it at the preview link below.' }])
       }
-    } catch (err) {
-      console.error('Publishing failed', err)
+    } catch (e) {
+      console.error("Publish failed", e)
     } finally {
       setIsPublishing(false)
     }
@@ -186,69 +189,51 @@ export default function IndustryBuilder({ params }: { params: { industry: string
   return (
     <div className="flex h-screen bg-[#0A0F1C] overflow-hidden pt-[90px]">
       {/* LEFT: Agent Chat Interface */}
-      <div className="w-[450px] flex-shrink-0 flex flex-col bg-[#0A0F1C] border-r border-white/5">
-        <div className="p-6 border-b border-white/5 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/dashboard" className="text-white/50 hover:text-white">
-              <ChevronLeft size={20} />
-            </Link>
-            <div>
-              <h2 className="text-sm font-bold uppercase tracking-widest text-[#B5780A]">Zemen Agent</h2>
-              <div className="flex items-center gap-2 mt-1">
-                <div className={`w-1.5 h-1.5 rounded-full ${loading ? 'bg-yellow-500 animate-pulse' : 'bg-green-500'}`} />
-                <span className="text-[10px] text-white/40 uppercase font-black tracking-widest">
-                  {loading ? agentStatus || 'Processing...' : 'Systems Ready'}
-                </span>
+      <div className="w-[450px] flex flex-col border-r border-white/5 bg-[#0D121F] shadow-2xl relative z-20">
+        <div className="p-6 border-b border-white/5 flex items-center justify-between bg-black/20">
+           <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-[#B5780A] rounded-lg flex items-center justify-center shadow-lg shadow-yellow-900/20">
+                <Terminal size={18} className="text-white" />
               </div>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-             <button onClick={handleUndo} disabled={historyIndex < 0} className="p-2 bg-white/5 rounded-lg text-white/40 hover:text-white disabled:opacity-20 transition-all">
-                <Undo size={16} />
-             </button>
-             <button className="p-2 bg-white/5 rounded-lg text-white/40 hover:text-white disabled:opacity-20 transition-all">
-                <Redo size={16} />
-             </button>
-          </div>
+              <div>
+                <h2 className="text-white font-black text-xs uppercase tracking-[0.2em]">Zemen Agent</h2>
+                <div className="flex items-center gap-2 mt-0.5">
+                   <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                   <span className="text-[10px] text-white/30 font-bold uppercase tracking-widest">{agentStatus || 'Standing By'}</span>
+                </div>
+              </div>
+           </div>
+           <button onClick={() => router.push('/dashboard')} className="p-2 hover:bg-white/5 rounded-full transition-colors text-white/30">
+              <ChevronLeft size={20} />
+           </button>
         </div>
 
         <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide">
           {messages.map((m, i) => (
-            <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[85%] p-4 rounded-2xl text-sm leading-relaxed ${
+            <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-500`}>
+              <div className={`max-w-[85%] p-4 rounded-2xl text-xs leading-relaxed ${
                 m.role === 'user' 
-                ? 'bg-[#B5780A] text-white rounded-tr-none shadow-xl shadow-yellow-900/10' 
-                : m.role === 'system'
-                ? 'bg-red-900/20 text-red-400 border border-red-900/30 w-full text-center italic text-xs'
-                : 'bg-white/5 text-white/90 border border-white/5 rounded-tl-none'
+                  ? 'bg-[#B5780A] text-white shadow-lg shadow-yellow-900/10 rounded-tr-none' 
+                  : m.role === 'system'
+                  ? 'bg-white/5 text-brand-gold italic border border-white/5'
+                  : 'bg-white/5 text-white/80 border border-white/5 shadow-xl rounded-tl-none'
               }`}>
                 {m.content}
               </div>
             </div>
           ))}
-          {loading && (
-            <div className="flex justify-start">
-              <div className="bg-white/5 p-4 rounded-2xl flex items-center gap-3 border border-white/5">
-                <Loader2 size={14} className="animate-spin text-[#B5780A]" />
-                <span className="text-xs text-white/40 font-mono italic">{agentStatus}...</span>
-              </div>
-            </div>
-          )}
           <div ref={chatEndRef} />
         </div>
 
-        <div className="p-6 bg-[#0A0F1C] border-t border-white/5">
-          <div className="relative flex items-center group">
-            <div className="absolute left-4 text-white/20 group-focus-within:text-[#B5780A] transition-colors">
-               <Terminal size={18} />
-            </div>
-            <input
-              type="text"
+        <div className="p-6 bg-black/20 border-t border-white/5">
+          <div className="relative flex items-center">
+            <input 
+              type="text" 
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-              placeholder="Ask the agent to change anything..."
-              className="w-full pl-12 pr-12 py-5 bg-white/5 border border-white/10 rounded-2xl text-white text-sm outline-none focus:border-[#B5780A] focus:bg-white/10 transition-all shadow-inner"
+              onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+              placeholder={tBuilder('placeholder')}
+              className="w-full bg-white/5 border border-white/10 text-white rounded-xl py-4 pl-5 pr-14 text-xs focus:outline-none focus:border-[#B5780A] transition-all placeholder:text-white/20"
             />
             <button 
               onClick={handleSendMessage}
@@ -304,21 +289,37 @@ export default function IndustryBuilder({ params }: { params: { industry: string
           {industry === 'dealership' && <DealershipTemplate data={siteData} />}
           
           {/* Overlay if not started */}
-          {!siteData.businessName && (
-            <div className="absolute inset-0 bg-white flex flex-col items-center justify-center text-center p-20">
-               <div className="w-24 h-24 bg-gray-50 rounded-[2.5rem] flex items-center justify-center mb-8 animate-bounce shadow-xl">
-                  <Layout size={40} className="text-gray-300" />
-               </div>
-               <h3 className="text-3xl font-black uppercase tracking-tighter text-gray-900">Digital Canvas Ready</h3>
-               <p className="text-gray-400 mt-4 max-w-xs uppercase text-[10px] font-black tracking-[0.3em] leading-relaxed">
-                 Tell the agent about your vision on the left to begin the architectural generation.
-               </p>
-            </div>
+          {!siteData.businessName && !loading && (
+             <div className="absolute inset-0 bg-bg-surface/80 backdrop-blur-sm flex items-center justify-center z-10 p-20 text-center">
+                <div className="max-w-md">
+                   <div className="w-20 h-20 bg-brand-gold/10 rounded-full flex items-center justify-center mx-auto mb-8">
+                      <Layout size={40} className="text-brand-gold" />
+                   </div>
+                   <h2 className="text-3xl font-black uppercase tracking-tighter mb-4">Your Brand Awaits</h2>
+                   <p className="text-text-muted mb-8 text-lg">Tell the Zemen Agent your business name and details on the left to start building your elite digital platform.</p>
+                </div>
+             </div>
           )}
+        </div>
 
-          {loading && (
-            <div className="absolute inset-0 bg-black/10 backdrop-blur-[1px] pointer-events-none transition-all" />
-          )}
+        {/* Toolbar Overlay */}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-xl border border-white/10 px-8 py-4 rounded-2xl flex items-center gap-8 shadow-2xl z-30">
+           <div className="flex items-center gap-3 border-r border-white/10 pr-8">
+              <button onClick={handleUndo} className="p-2 hover:bg-white/10 rounded-lg transition-colors text-white/50 hover:text-white">
+                <Undo size={18} />
+              </button>
+              <button className="p-2 hover:bg-white/10 rounded-lg transition-colors text-white/50 hover:text-white">
+                <Redo size={18} />
+              </button>
+           </div>
+           <div className="flex items-center gap-6 text-[10px] font-black uppercase tracking-[0.2em] text-white/30">
+              <button className="hover:text-brand-gold transition-colors flex items-center gap-2">
+                 <Camera size={14} /> Desktop
+              </button>
+              <button className="hover:text-brand-gold transition-colors flex items-center gap-2">
+                 <Layout size={14} /> Components
+              </button>
+           </div>
         </div>
       </div>
     </div>

@@ -87,7 +87,9 @@
     "publish": "Publish Site",
     "publishing": "Publishing...",
     "clickUpload": "Click to Upload Image",
-    "placeholder": "Type your response..."
+    "placeholder": "Type your response...",
+    "welcomeBack": "Welcome back to Zemen Agent! I'm ready to help you edit your {industry} site. What can I do for you today?",
+    "startBuilding": "I'm your Zemen AI Agent. Tell me about your {industry} and I'll build it for you instantly."
   },
   "auth": {
     "login": {
