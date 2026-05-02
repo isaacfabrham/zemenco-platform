@@ -1,66 +1,52 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
-import { NextResponse, type NextRequest } from 'next/server'
-import createIntlMiddleware from 'next-intl/middleware'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+import createMiddleware from 'next-intl/middleware'
 
-const locales = ['en', 'am', 'ti', 'ar'];
-const publicPages = ['/', '/login', '/signup', '/auth/callback'];
+const intlMiddleware = createMiddleware({
+  locales: ['en', 'am', 'ti', 'ar'],
+  defaultLocale: 'en',
+  localePrefix: 'as-needed'
+})
 
-const intlMiddleware = createIntlMiddleware({
-  locales,
-  defaultLocale: 'en'
-});
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
 
-export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  // Allow all public routes through without any auth check
+  const publicPaths = [
+    '/',
+    '/login',
+    '/signup',
+    '/auth/callback',
+    '/api/auth',
+    '/api/payments/webhook',
+    '/_next',
+    '/favicon.ico',
+    '/logo.png',
+  ]
 
-  // 1. Handle Localization first
-  const response = intlMiddleware(request);
+  const isPublic = publicPaths.some(path => pathname === path || pathname.startsWith(path + '/'))
+  if (isPublic) return intlMiddleware(request)
 
-  // 2. Handle Supabase Auth
-  let supabaseResponse = response;
+  // Protect only these routes
+  const protectedPaths = ['/dashboard', '/build', '/admin']
+  const isProtected = protectedPaths.some(path => pathname.includes(path))
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  if (!supabaseUrl || !supabaseKey) {
-    console.warn("Supabase environment variables are missing. Auth middleware skipped.");
-    return supabaseResponse;
-  }
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    {
-      cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value
-        },
-        set(name: string, value: string, options: CookieOptions) {
-          request.cookies.set({ name, value, ...options })
-          supabaseResponse.cookies.set({ name, value, ...options })
-        },
-        remove(name: string, options: CookieOptions) {
-          request.cookies.set({ name, value: '', ...options })
-          supabaseResponse.cookies.set({ name, value: '', ...options })
-        },
-      },
+  if (isProtected) {
+    // Check for potential Supabase cookies
+    const hasSession = request.cookies.getAll().some(cookie => cookie.name.includes('auth-token') || cookie.name.includes('access-token'))
+    
+    if (!hasSession) {
+      const locale = pathname.split('/')[1] || 'en'
+      const loginUrl = new URL(`/${locale}/login`, request.url)
+      return NextResponse.redirect(loginUrl)
     }
-  )
-
-  const { data: { user } } = await supabase.auth.getUser()
-
-  // 3. Protected Route Gating
-  const isProtectedRoute = pathname.includes('/dashboard') || pathname.includes('/build');
-
-  if (!user && isProtectedRoute) {
-    const locale = pathname.split('/')[1] || 'en';
-    const loginUrl = new URL(`/${locale}/login`, request.url);
-    return NextResponse.redirect(loginUrl);
   }
 
-  return supabaseResponse;
+  return intlMiddleware(request)
 }
 
 export const config = {
-  matcher: ['/', '/(am|en|ti|ar)/:path*', '/((?!api|_next|_vercel|.*\\..*).*)']
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.png|.*\\.jpg|.*\\.svg).*)',
+  ]
 }
