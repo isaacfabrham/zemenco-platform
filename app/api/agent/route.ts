@@ -4,6 +4,9 @@ import Groq from 'groq-sdk'
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 export async function POST(req: Request) {
+  if (!process.env.GROQ_API_KEY || process.env.GROQ_API_KEY === 'gsk_dummy') {
+    return NextResponse.json({ error: 'GROQ_API_KEY is not configured' }, { status: 500 })
+  }
   try {
     const body = await req.json()
     const { prompt } = body

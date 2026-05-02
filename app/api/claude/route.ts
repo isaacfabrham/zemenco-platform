@@ -5,6 +5,9 @@ import { createClient } from '@/utils/supabase/server'
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 export async function POST(req: Request) {
+  if (!process.env.GROQ_API_KEY || process.env.GROQ_API_KEY === 'gsk_dummy') {
+    return NextResponse.json({ error: 'GROQ_API_KEY is not configured' }, { status: 500 })
+  }
   try {
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
