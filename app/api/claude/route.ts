@@ -7,6 +7,9 @@ const anthropic = new Anthropic({
 })
 
 export async function POST(req: Request) {
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return NextResponse.json({ error: 'ANTHROPIC_API_KEY is not configured' }, { status: 500 })
+  }
   try {
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()

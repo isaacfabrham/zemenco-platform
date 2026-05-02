@@ -56,10 +56,17 @@ export default function Chatbot() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: [...messages, userMessage].map(m => ({
-            role: m.role,
-            content: m.content
-          })),
+          messages: [...messages, userMessage]
+            .filter((m, idx, arr) => {
+              // Claude requires messages to alternate and START with a user message.
+              // If the first message is an assistant greeting, we skip it for the API.
+              if (idx === 0 && m.role === 'assistant') return false;
+              return true;
+            })
+            .map(m => ({
+              role: m.role,
+              content: m.content
+            })),
           locale
         })
       })
@@ -68,7 +75,8 @@ export default function Chatbot() {
       if (data.result) {
         setMessages(prev => [...prev, { role: 'assistant', content: data.result.text }])
       } else {
-        setMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' }])
+        const errorMsg = data.error || 'Sorry, I encountered an error. Please try again.'
+        setMessages(prev => [...prev, { role: 'assistant', content: errorMsg }])
       }
     } catch (error) {
       console.error('Chat error:', error)
