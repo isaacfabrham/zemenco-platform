@@ -1,6 +1,5 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
 import createMiddleware from 'next-intl/middleware'
+import { NextRequest, NextResponse } from 'next/server'
 
 const intlMiddleware = createMiddleware({
   locales: ['en', 'am', 'ti', 'ar'],
@@ -8,36 +7,30 @@ const intlMiddleware = createMiddleware({
   localePrefix: 'as-needed'
 })
 
-export function middleware(request: NextRequest) {
+export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Allow all public routes through without any auth check
-  const publicPaths = [
-    '/',
-    '/login',
-    '/signup',
-    '/auth/callback',
-    '/api/auth',
-    '/api/payments/webhook',
-    '/_next',
-    '/favicon.ico',
-    '/logo.png',
-  ]
+  // Skip middleware for API routes and static files
+  if (
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/auth/callback') ||
+    pathname.includes('.') 
+  ) {
+    return NextResponse.next()
+  }
 
-  const isPublic = publicPaths.some(path => pathname === path || pathname.startsWith(path + '/'))
-  if (isPublic) return intlMiddleware(request)
-
-  // Protect only these routes
-  const protectedPaths = ['/dashboard', '/build', '/admin']
-  const isProtected = protectedPaths.some(path => pathname.includes(path))
+  // Only protect dashboard and build routes
+  const protectedRoutes = ['/dashboard', '/build', '/admin']
+  const isProtected = protectedRoutes.some(route => pathname.includes(route))
 
   if (isProtected) {
-    // Check for potential Supabase cookies
-    const hasSession = request.cookies.getAll().some(cookie => cookie.name.includes('auth-token') || cookie.name.includes('access-token'))
-    
+    const cookies = request.cookies
+    const hasSession = cookies.has('sb-access-token') || 
+                       cookies.has('supabase-auth-token') ||
+                       cookies.getAll().some(c => c.name.includes('supabase'))
     if (!hasSession) {
-      const locale = pathname.split('/')[1] || 'en'
-      const loginUrl = new URL(`/${locale}/login`, request.url)
+      const loginUrl = new URL('/login', request.url)
       return NextResponse.redirect(loginUrl)
     }
   }
@@ -46,7 +39,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.png|.*\\.jpg|.*\\.svg).*)',
-  ]
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|.*\\.png|.*\\.jpg|.*\\.svg|.*\\.ico).*)']
 }
