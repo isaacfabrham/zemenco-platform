@@ -5,11 +5,11 @@ import { createClient } from '@/utils/supabase/server'
 const PLANS = {
   starter: {
     priceId: process.env.STRIPE_PRICE_STARTER_ID, // You need to set this in .env
-    amount: 5000,
+    amount: 1699,
   },
   pro: {
     priceId: process.env.STRIPE_PRICE_PRO_ID, // You need to set this in .env
-    amount: 15000,
+    amount: 2799,
   }
 }
 

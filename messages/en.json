@@ -54,7 +54,7 @@
     "month": "/month",
     "starter": {
       "name": "Starter",
-      "price": "$50",
+      "price": "$16.99",
       "desc": "Self-serve builder, AI chatbot assistant, 1 industry template, mobile optimized, contact form, basic SEO",
       "cta": "Start With Starter",
       "features": [
@@ -66,7 +66,7 @@
     },
     "pro": {
       "name": "Pro",
-      "price": "$150",
+      "price": "$27.99",
       "desc": "Everything in Starter + done-for-you setup, multilingual support, advanced SEO, AI customer chatbot",
       "cta": "Claim Market Dominance",
       "badge": "Ultimate Value",

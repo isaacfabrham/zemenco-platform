@@ -54,7 +54,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="pt-[220px] pb-[160px] relative flex flex-col items-center text-center px-4 overflow-hidden">
         <div className="mesh-gradient" />
-        <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-[45vw] font-black text-bg-dark opacity-5 pointer-events-none z-0 tracking-tighter reveal active">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[30vw] font-black text-brand-gold opacity-[0.06] pointer-events-none z-[-1] tracking-tighter">
           ዘመን
         </div>
         <div className="relative z-10 max-w-[1200px] flex flex-col items-center">
