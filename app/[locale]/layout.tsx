@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Outfit } from "next/font/google";
 import "../globals.css";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import ChatbotWrapper from "@/components/ChatbotWrapper";
 import ErrorBoundaryWrapper from "@/components/ErrorBoundaryWrapper";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
+const outfit = Outfit({ subsets: ["latin"], variable: '--font-outfit' });
 
 export const metadata: Metadata = {
   title: "Zemen Co. | Digital Architecture for Habesha Excellence",
@@ -44,7 +45,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} dir={dir}>
-      <body className={inter.className}>
+      <body className={`${inter.variable} ${outfit.variable} font-sans antialiased`}>
         <NextIntlClientProvider messages={messages} locale={locale}>
           <ErrorBoundaryWrapper>
             <div className="noise-overlay" />

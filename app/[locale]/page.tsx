@@ -23,7 +23,7 @@ export default function Home() {
     <main className="min-h-screen bg-bg-surface text-text-main font-sans">
       
       {/* Navigation */}
-      <header className="fixed top-0 w-full h-[90px] bg-bg-surface/85 backdrop-blur-md border-b border-border-color z-50 flex items-center reveal active">
+      <header className="fixed top-0 w-full h-[90px] glass-header z-50 flex items-center reveal active">
         <div className="container mx-auto px-10 flex justify-between items-center w-full max-w-[1400px]">
           <Link href="/" className="flex items-center gap-4 hover-target">
             <div className="font-extrabold text-xl tracking-tighter">ZEMEN CO.</div>
@@ -53,6 +53,7 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="pt-[220px] pb-[160px] relative flex flex-col items-center text-center px-4 overflow-hidden">
+        <div className="mesh-gradient" />
         <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-[45vw] font-black text-bg-dark opacity-5 pointer-events-none z-0 tracking-tighter reveal active">
           ዘመን
         </div>
@@ -86,8 +87,8 @@ export default function Home() {
               { step: '2', title: tProcess('step2.title'), desc: tProcess('step2.desc'), color: 'bg-brand-gold' },
               { step: '3', title: tProcess('step3.title'), desc: tProcess('step3.desc'), color: 'bg-brand-red' }
             ].map((item, i) => (
-              <div key={i} className={`text-center p-10 bg-white/5 rounded border border-white/10 reveal active delay-${(i + 1) * 100}`}>
-                <div className={`w-16 h-16 ${item.color} text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6`}>
+              <div key={i} className={`text-center p-10 card-premium reveal active delay-${(i + 1) * 100}`}>
+                <div className={`w-16 h-16 ${item.color} text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg shadow-${item.color.split('-')[1]}/20`}>
                   {item.step}
                 </div>
                 <h3 className="text-2xl font-bold mb-4">{item.title}</h3>
@@ -112,7 +113,7 @@ export default function Home() {
               { title: tTemplates('salon.title'), url: '/build/salon', desc: tTemplates('salon.desc'), border: 'border-t-4 border-t-brand-green' },
               { title: tTemplates('dealership.title'), url: '/build/dealership', desc: tTemplates('dealership.desc') }
             ].map((item, i) => (
-              <div key={i} className={`bg-bg-white p-10 border border-border-color rounded flex flex-col hover:-translate-y-2 transition-transform shadow-soft hover:shadow-hover reveal active delay-${(i + 1) * 100} ${item.border || ''}`}>
+              <div key={i} className={`card-premium p-10 flex flex-col hover:shadow-hover reveal active delay-${(i + 1) * 100} ${item.border || ''}`}>
                 <h3 className="text-3xl font-bold mb-4">{item.title}</h3>
                 <p className="text-text-muted text-lg mb-8 flex-1">{item.desc}</p>
                 <Link href={item.url} className="px-6 py-4 border border-border-color font-semibold uppercase text-center rounded hover:bg-bg-surface transition-colors">
@@ -135,9 +136,9 @@ export default function Home() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-[1100px] mx-auto">
             {/* Starter Plan */}
-            <div className="bg-bg-white p-16 border border-border-color rounded shadow-soft hover:shadow-hover hover:-translate-y-2 transition-transform flex flex-col reveal active delay-100">
+            <div className="card-premium p-16 shadow-soft hover:shadow-hover flex flex-col reveal active delay-100">
               <h3 className="text-3xl font-bold mb-4">{tPricing('starter.name')}</h3>
-              <div className="text-7xl font-extrabold mb-8 flex items-baseline gap-2 tracking-tighter">
+              <div className="text-7xl font-extrabold mb-8 flex items-baseline gap-2 tracking-tighter text-brand-gold">
                 {tPricing('starter.price')}<span className="text-xl font-medium text-text-muted tracking-normal">{tPricing('month')}</span>
               </div>
               <p className="text-lg text-text-muted mb-10">{tPricing('starter.desc')}</p>
@@ -155,13 +156,12 @@ export default function Home() {
             </div>
             
             {/* Pro Plan */}
-            <div className="bg-bg-white p-16 border border-brand-gold rounded shadow-hover hover:-translate-y-2 transition-transform flex flex-col relative md:-translate-y-6 reveal active delay-200">
-              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-brand-green via-brand-gold to-brand-red" />
-              <div>
-                <span className="inline-block px-4 py-1.5 bg-brand-gold/10 text-brand-gold text-sm font-bold uppercase tracking-widest mb-6 rounded-full">{tPricing('pro.badge')}</span>
+            <div className="bg-bg-white p-16 border-2 border-brand-gold rounded-[24px] shadow-hover hover:-translate-y-2 transition-transform flex flex-col relative md:-translate-y-6 reveal active delay-200">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                <span className="inline-block px-6 py-2 bg-brand-gold text-white text-xs font-bold uppercase tracking-[0.2em] rounded-full shadow-lg shadow-gold/20">{tPricing('pro.badge')}</span>
               </div>
               <h3 className="text-3xl font-bold mb-4">{tPricing('pro.name')}</h3>
-              <div className="text-7xl font-extrabold mb-8 flex items-baseline gap-2 tracking-tighter">
+              <div className="text-7xl font-extrabold mb-8 flex items-baseline gap-2 tracking-tighter text-brand-gold">
                 {tPricing('pro.price')}<span className="text-xl font-medium text-text-muted tracking-normal">{tPricing('month')}</span>
               </div>
               <p className="text-lg text-text-muted mb-10">{tPricing('pro.desc')}</p>

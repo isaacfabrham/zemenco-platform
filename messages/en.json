@@ -95,21 +95,40 @@
     "login": {
       "title": "Welcome back",
       "subtitle": "Log in to manage your platform",
-      "email": "Email",
+      "tagline": "Deep Roots. Limitless Growth.",
+      "email": "Email Address",
       "password": "Password",
       "button": "Log In",
-      "loggingIn": "Logging in...",
+      "loggingIn": "Logging you in...",
       "noAccount": "Don't have an account?",
-      "signup": "Sign up"
+      "signup": "Sign up",
+      "forgotPassword": "Forgot password?",
+      "google": "Continue with Google",
+      "errors": {
+        "invalidEmail": "Please enter a valid email address",
+        "invalidPassword": "Password must be at least 8 characters",
+        "credentials": "Incorrect email or password. Please try again.",
+        "verify": "Please check your inbox and verify your email before logging in."
+      }
     },
     "signup": {
       "title": "Create your account",
       "subtitle": "Start building your custom platform",
+      "tagline": "Deep Roots. Limitless Growth.",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "industry": "Industry",
+      "industryPlaceholder": "Select your industry",
       "button": "Sign Up",
-      "creating": "Creating...",
+      "creating": "Creating account...",
       "haveAccount": "Already have an account?",
       "login": "Log in",
-      "success": "Account created! Please check {email} to verify your account."
+      "success": "Check your email — we sent a verification link to {email}",
+      "industries": {
+        "restaurant": "Restaurant",
+        "salon": "Salon",
+        "dealership": "Car Dealership"
+      }
     }
   },
   "dashboard": {
