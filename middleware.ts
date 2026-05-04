@@ -20,8 +20,8 @@ export default function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Only protect dashboard and build routes
-  const protectedRoutes = ['/dashboard', '/build', '/admin']
+  // Only protect dashboard and build routes + new Canva/Shopify routes
+  const protectedRoutes = ['/dashboard', '/build', '/admin', '/templates', '/my-site', '/settings']
   const isProtected = protectedRoutes.some(route => pathname.includes(route))
 
   if (isProtected) {
@@ -31,6 +31,7 @@ export default function middleware(request: NextRequest) {
                        cookies.getAll().some(c => c.name.includes('supabase'))
     if (!hasSession) {
       const loginUrl = new URL('/login', request.url)
+      loginUrl.searchParams.set('redirect', pathname)
       return NextResponse.redirect(loginUrl)
     }
   }

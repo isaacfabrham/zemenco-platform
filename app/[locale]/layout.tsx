@@ -12,6 +12,13 @@ const outfit = Outfit({ subsets: ["latin"], variable: '--font-outfit' });
 export const metadata: Metadata = {
   title: "Zemen Co. | Digital Architecture for Habesha Excellence",
   description: "We build premium, high-converting websites and AI systems for Ethiopian and Eritrean businesses. Deep Roots. Limitless Growth.",
+  manifest: '/manifest.json',
+  themeColor: '#1D9E75',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Zemen Co.',
+  },
   icons: {
     icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',

@@ -23,7 +23,7 @@ export async function GET(request: Request) {
       if (plan) {
         return NextResponse.redirect(`${origin}/${locale}/checkout?plan=${plan}`)
       }
-      return NextResponse.redirect(`${origin}/${locale}${next}`)
+      return NextResponse.redirect(`${origin}/${locale}/dashboard`)
     }
   }
 
