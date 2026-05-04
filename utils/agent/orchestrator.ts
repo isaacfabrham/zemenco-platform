@@ -1,5 +1,4 @@
 import { callAgent, AGENT_MODELS } from './base'
-import { addAgentTask } from './queue'
 
 export class OrchestratorAgent {
   async processRequest(userId: string, siteId: string, userMessage: string, currentSiteData: any) {
@@ -27,17 +26,6 @@ export class OrchestratorAgent {
     `
 
     const result = await callAgent(prompt, AGENT_MODELS.ORCHESTRATOR)
-    
-    // Add tasks to the queue
-    for (const task of result.tasks) {
-      await addAgentTask({
-        type: task.agent,
-        userId,
-        siteId,
-        payload: { instruction: task.instruction, currentSiteData }
-      })
-    }
-
     return result
   }
 }
