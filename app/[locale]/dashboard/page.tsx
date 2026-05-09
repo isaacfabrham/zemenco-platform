@@ -15,7 +15,7 @@ export default function Dashboard() {
       else setUser(user)
     }
     getUser()
-  }, [])
+  }, [router, supabase.auth])
 
   if (!user) return <div>Loading...</div>
 

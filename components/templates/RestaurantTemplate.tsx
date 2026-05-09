@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import Image from 'next/image'
 import { MapPin, Phone, Clock, Globe, ChevronRight, Instagram, Facebook } from 'lucide-react'
 
 interface RestaurantData {
@@ -81,7 +82,13 @@ export default function RestaurantTemplate({ data, lang: initialLang = 'en' }: {
 
         {data.photos?.[0] ? (
           <div className="absolute inset-0 z-0">
-            <img src={data.photos[0]} alt="Hero" className="w-full h-full object-cover scale-105" />
+            <Image 
+              src={data.photos[0]} 
+              alt="Hero" 
+              fill
+              className="object-cover scale-105" 
+              priority
+            />
             <div className="absolute inset-0 bg-gradient-to-b from-[#0A0F1C]/80 via-[#0A0F1C]/40 to-[#0A0F1C]" />
           </div>
         ) : (
@@ -115,14 +122,17 @@ export default function RestaurantTemplate({ data, lang: initialLang = 'en' }: {
 
       {/* Story Section */}
       <section className="py-32 px-6 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
-         <div className="relative group">
-            <div className="absolute -inset-4 border border-[#B5780A]/20 rounded-2xl group-hover:-inset-6 transition-all duration-500" />
-            <img 
-              src={data.photos?.[1] || "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80"} 
-              className="w-full aspect-[4/5] object-cover rounded-xl grayscale hover:grayscale-0 transition-all duration-700 shadow-2xl"
-              alt="Atmosphere"
-            />
-         </div>
+          <div className="relative group overflow-hidden rounded-xl">
+             <div className="absolute -inset-4 border border-[#B5780A]/20 rounded-2xl group-hover:-inset-6 transition-all duration-500 z-10" />
+             <div className="relative aspect-[4/5] w-full">
+               <Image 
+                 src={data.photos?.[1] || "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80"} 
+                 className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                 alt="Atmosphere"
+                 fill
+               />
+             </div>
+          </div>
          <div>
             <span className="text-[var(--primary)] font-black tracking-[0.3em] uppercase text-xs mb-4 block">{t.story}</span>
             <h2 className="text-5xl md:text-6xl font-black uppercase tracking-tighter mb-8 leading-tight">Crafting Moments, <br/> One Plate at a Time</h2>

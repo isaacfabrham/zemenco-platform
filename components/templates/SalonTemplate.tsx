@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import Image from 'next/image'
 import { MapPin, Phone, Clock, Calendar, Instagram, ArrowRight, Star } from 'lucide-react'
 
 interface SalonData {
@@ -48,7 +49,13 @@ export default function SalonTemplate({ data, lang: initialLang = 'en' }: { data
       <section className="relative h-screen flex items-center overflow-hidden bg-[#0F0F0F]">
         <div className="absolute inset-0 z-0">
           {data.photos?.[0] ? (
-            <img src={data.photos[0]} alt="Hero" className="w-full h-full object-cover opacity-70 scale-105" />
+            <Image 
+              src={data.photos[0]} 
+              alt="Hero" 
+              fill
+              className="object-cover opacity-70 scale-105" 
+              priority
+            />
           ) : (
             <div className="w-full h-full bg-[#1a1a1a]" />
           )}

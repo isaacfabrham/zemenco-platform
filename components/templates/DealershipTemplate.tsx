@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
+import Image from 'next/image'
 import { MapPin, Phone, Clock, Gauge, Calendar, ShieldCheck, Filter, ChevronRight, Zap, Trophy, CreditCard } from 'lucide-react'
 
 interface Vehicle {
@@ -83,7 +84,13 @@ export default function DealershipTemplate({ data, lang: initialLang = 'en' }: {
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         {data.photos?.[0] ? (
           <div className="absolute inset-0">
-             <img src={data.photos[0]} alt="Hero" className="absolute inset-0 w-full h-full object-cover opacity-60 scale-105" />
+             <Image 
+               src={data.photos[0]} 
+               alt="Hero" 
+               fill
+               className="object-cover opacity-60 scale-105" 
+               priority
+             />
              <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent" />
           </div>
         ) : (
@@ -190,7 +197,12 @@ export default function DealershipTemplate({ data, lang: initialLang = 'en' }: {
             <div key={i} className="group relative bg-[#0F0F0F] border border-white/5 overflow-hidden transition-all hover:border-[var(--primary)]/50 shadow-2xl">
               <div className="aspect-[16/10] bg-[#1a1a1a] relative overflow-hidden">
                 {v.photo ? (
-                   <img src={v.photo} alt={v.model} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100" />
+                   <Image 
+                     src={v.photo} 
+                     alt={v.model} 
+                     fill
+                     className="object-cover group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100" 
+                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-white/10 font-black uppercase text-[10px] tracking-widest">Visual Data Unavailable</div>
                 )}

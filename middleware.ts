@@ -21,7 +21,11 @@ export default function middleware(request: NextRequest) {
   }
 
   const protectedRoutes = ['/dashboard', '/build', '/my-site', '/settings', '/templates']
-  const isProtected = protectedRoutes.some(route => pathname.includes(route))
+  const isProtected = protectedRoutes.some(route => {
+    // Match either the exact path or paths starting with the route (handling locales)
+    const segments = pathname.split('/')
+    return segments.includes(route.replace('/', ''))
+  })
 
   if (isProtected) {
     const hasSession = request.cookies.getAll().some(c =>
