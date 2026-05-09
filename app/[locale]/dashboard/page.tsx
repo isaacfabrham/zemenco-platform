@@ -18,8 +18,9 @@ import {
   LayoutDashboard
 } from 'lucide-react';
 import PortalButton from '@/components/PortalButton';
-import { useRouter } from '@/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import SuccessModal from '@/components/SuccessModal';
 
 export default function DashboardPage() {
   const t = useTranslations('dashboard');
@@ -28,6 +29,8 @@ export default function DashboardPage() {
   const [profile, setProfile] = useState<any>(null);
   const [sites, setSites] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     async function loadData() {
@@ -50,6 +53,15 @@ export default function DashboardPage() {
     }
     loadData();
   }, [router]);
+
+  useEffect(() => {
+    const sessionId = searchParams.get('session_id');
+    if (sessionId) {
+      setShowSuccess(true);
+      // Clean up URL without refreshing
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, [searchParams]);
 
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-[#F4F5F7] text-[#0F2820] font-medium tracking-wide">Loading Dashboard...</div>;
 
@@ -285,6 +297,12 @@ export default function DashboardPage() {
         </Link>
       </div>
 
+      <SuccessModal 
+        isOpen={showSuccess} 
+        onClose={() => setShowSuccess(false)}
+        siteUrl={sites[0] ? `${process.env.NEXT_PUBLIC_SITE_URL}/site/${sites[0].slug}` : '#'}
+        businessName={sites[0]?.site_data?.businessName || 'Your Business'}
+      />
     </div>
   );
 }

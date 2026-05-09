@@ -23,7 +23,9 @@ export async function GET(request: Request) {
       if (plan) {
         return NextResponse.redirect(`${origin}/${locale}/checkout?plan=${plan}`)
       }
-      return NextResponse.redirect(`${origin}/${locale}/dashboard`)
+      
+      const finalRedirect = next.startsWith('/') ? `${origin}/${locale}${next === '/' ? '/dashboard' : next}` : `${origin}/${locale}/dashboard`
+      return NextResponse.redirect(finalRedirect)
     }
   }
 

@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import ChatbotWrapper from "@/components/ChatbotWrapper";
 import ErrorBoundaryWrapper from "@/components/ErrorBoundaryWrapper";
+import PWAInstaller from "@/components/PWAInstaller";
 
 const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
 const outfit = Outfit({ subsets: ["latin"], variable: '--font-outfit' });
@@ -58,6 +59,7 @@ export default async function RootLayout({
             <div className="noise-overlay" />
             {children}
             <ChatbotWrapper />
+            <PWAInstaller />
           </ErrorBoundaryWrapper>
         </NextIntlClientProvider>
       </body>

@@ -42,6 +42,36 @@ export async function POST(req: Request) {
         subscription_status: subscription.status,
         plan_type: plan
       }).eq('id', userId)
+
+      // AUTOMATIC SITE PUBLISHING & EMAIL
+      if (subscription.status === 'active' || subscription.status === 'trialing') {
+        // Find the user's latest site to publish
+        const { data: latestSite } = await supabase
+          .from('sites')
+          .select('*')
+          .eq('user_id', userId)
+          .order('updated_at', { ascending: false })
+          .limit(1)
+          .single()
+
+        if (latestSite && !latestSite.published) {
+          // 1. Mark as published
+          await supabase.from('sites').update({ published: true }).eq('id', latestSite.id)
+
+          // 2. Send branded email via Resend
+          const { sendPublishedEmail } = await import('@/utils/email')
+          const { data: userData } = await supabase.from('users').select('email').eq('id', userId).single()
+          
+          if (userData?.email) {
+            const siteUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/site/${latestSite.slug}`
+            await sendPublishedEmail(
+              userData.email,
+              latestSite.site_data?.businessName || 'Your Business',
+              siteUrl
+            )
+          }
+        }
+      }
     }
   } else if (event.type === 'customer.subscription.deleted') {
     const subscription = event.data.object as Stripe.Subscription

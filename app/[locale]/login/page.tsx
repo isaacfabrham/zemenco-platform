@@ -54,8 +54,11 @@ export default function LoginPage() {
       }
 
       setAuthStatus('success');
+      const searchParams = new URLSearchParams(window.location.search);
+      const redirectTo = searchParams.get('redirect') || '/dashboard';
+      
       setTimeout(() => {
-        router.push('/dashboard');
+        router.push(redirectTo);
         router.refresh();
       }, 1000);
     } catch (err: any) {
@@ -67,10 +70,15 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     try {
+      const searchParams = new URLSearchParams(window.location.search);
+      const redirectToParam = searchParams.get('redirect');
+      const callbackUrl = new URL(`${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`);
+      if (redirectToParam) callbackUrl.searchParams.set('next', redirectToParam);
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+          redirectTo: callbackUrl.toString(),
         },
       });
       if (error) throw error;

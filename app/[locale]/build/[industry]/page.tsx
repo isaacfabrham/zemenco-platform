@@ -2,8 +2,10 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from '@/navigation'
-import { Send, Loader2, Globe, Layout, ChevronLeft, Save, Sparkles, Image as ImageIcon, Smartphone, Monitor, Check } from 'lucide-react'
+import { Send, Loader2, Globe, Layout, ChevronLeft, Save, Sparkles, Image as ImageIcon, Smartphone, Monitor, Check, X } from 'lucide-react'
 import { useTranslations, useLocale } from 'next-intl'
+import { motion, AnimatePresence } from 'framer-motion'
+import confetti from 'canvas-confetti'
 import RestaurantTemplate from '@/components/templates/RestaurantTemplate'
 import SalonTemplate from '@/components/templates/SalonTemplate'
 import DealershipTemplate from '@/components/templates/DealershipTemplate'
@@ -85,7 +87,15 @@ export default function IndustryBuilder({ params }: { params: { industry: string
     setProgress(newProgress)
     
     if (newProgress >= 50 && progress < 50) setShowCelebration('halfway')
-    if (newProgress >= 100 && progress < 100) setShowCelebration('complete')
+    if (newProgress >= 100 && progress < 100) {
+      setShowCelebration('complete')
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 },
+        zIndex: 100
+      })
+    }
 
     try {
       const response = await fetch(`/api/agent/stream?message=${encodeURIComponent(userMessage)}&siteId=${siteId}&userId=current`, {
@@ -337,6 +347,22 @@ export default function IndustryBuilder({ params }: { params: { industry: string
               <Smartphone size={18} />
             </button>
           </div>
+          
+          {/* Halfway Celebration Toast */}
+          <AnimatePresence>
+            {showCelebration === 'halfway' && (
+              <motion.div 
+                initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="absolute bottom-24 left-1/2 -translate-x-1/2 z-40 bg-[#1D9E75] text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 font-bold"
+              >
+                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">🎉</div>
+                <span>Halfway there! Your site is taking shape</span>
+                <button onClick={() => setShowCelebration('none')} className="ml-2 hover:text-white/60"><X size={16} /></button>
+              </motion.div>
+            )}
+          </AnimatePresence>
           
           {/* Full Screen Completion Celebration */}
           {showCelebration === 'complete' && (
