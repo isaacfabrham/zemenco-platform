@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter, usePathname, Link } from '@/navigation';
 
@@ -15,6 +16,8 @@ export default function Home() {
   const router = useRouter();
   const pathname = usePathname();
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   const handleLangChange = (newLocale: string) => {
     router.replace(pathname, { locale: newLocale });
   };
@@ -24,7 +27,7 @@ export default function Home() {
       
       {/* Navigation */}
       <header className="fixed top-0 w-full h-[90px] glass-header z-50 flex items-center reveal active">
-        <div className="container mx-auto px-10 flex justify-between items-center w-full max-w-[1400px]">
+        <div className="container mx-auto px-6 md:px-10 flex justify-between items-center w-full max-w-[1400px]">
           <Link href="/" className="flex items-center gap-4 hover-target">
             <div className="font-extrabold text-xl tracking-tighter">ZEMEN CO.</div>
           </Link>
@@ -33,22 +36,65 @@ export default function Home() {
             <Link href="#pricing" className="text-sm font-bold text-text-main/70 uppercase tracking-widest hover:text-text-main transition-colors">{tNav('pricing')}</Link>
             <Link href="#reviews" className="text-sm font-bold text-text-main/70 uppercase tracking-widest hover:text-text-main transition-colors">{tNav('reviews')}</Link>
           </nav>
-          <div className="flex items-center gap-6">
-            <select 
-              value={locale} 
-              onChange={(e) => handleLangChange(e.target.value)}
-              className="bg-transparent font-semibold cursor-pointer outline-none"
+          <div className="flex items-center gap-4 md:gap-6">
+            <div className="hidden sm:flex items-center gap-4 md:gap-6">
+              <select 
+                value={locale} 
+                onChange={(e) => handleLangChange(e.target.value)}
+                className="bg-transparent font-semibold cursor-pointer outline-none text-sm"
+              >
+                <option value="en">EN</option>
+                <option value="am">አማ</option>
+                <option value="ti">ትግ</option>
+                <option value="ar">عرب</option>
+              </select>
+              <Link href="/login" className="px-5 py-2.5 md:px-7 md:py-3.5 bg-text-main text-bg-white font-semibold text-xs md:text-sm rounded uppercase hover:bg-brand-gold hover:-translate-y-1 transition-all">
+                {tNav('startScaling')}
+              </Link>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button 
+              className="md:hidden p-2 text-text-main"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              <option value="en">EN</option>
-              <option value="am">አማ</option>
-              <option value="ti">ትግ</option>
-              <option value="ar">عرب</option>
-            </select>
-            <Link href="/login" className="px-7 py-3.5 bg-text-main text-bg-white font-semibold text-sm rounded uppercase hover:bg-brand-gold hover:-translate-y-1 transition-all">
-              {tNav('startScaling')}
-            </Link>
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {isMenuOpen ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                )}
+              </svg>
+            </button>
           </div>
         </div>
+
+        {/* Mobile Menu Dropdown */}
+        {isMenuOpen && (
+          <div className="absolute top-[90px] left-0 w-full bg-bg-white border-t border-border-color shadow-2xl md:hidden py-6 px-10 flex flex-col gap-6 animate-fade-in">
+            <Link href="#expertise" onClick={() => setIsMenuOpen(false)} className="text-sm font-bold uppercase tracking-widest">{tNav('expertise')}</Link>
+            <Link href="#pricing" onClick={() => setIsMenuOpen(false)} className="text-sm font-bold uppercase tracking-widest">{tNav('pricing')}</Link>
+            <Link href="#reviews" onClick={() => setIsMenuOpen(false)} className="text-sm font-bold uppercase tracking-widest">{tNav('reviews')}</Link>
+            <div className="pt-4 border-t border-border-color flex flex-col gap-4">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-widest text-text-muted">Language</span>
+                <select 
+                  value={locale} 
+                  onChange={(e) => { handleLangChange(e.target.value); setIsMenuOpen(false); }}
+                  className="bg-transparent font-semibold cursor-pointer outline-none"
+                >
+                  <option value="en">English</option>
+                  <option value="am">አማርኛ</option>
+                  <option value="ti">ትግርኛ</option>
+                  <option value="ar">العربية</option>
+                </select>
+              </div>
+              <Link href="/login" onClick={() => setIsMenuOpen(false)} className="w-full py-4 bg-text-main text-bg-white text-center font-bold uppercase tracking-widest rounded">
+                {tNav('startScaling')}
+              </Link>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}

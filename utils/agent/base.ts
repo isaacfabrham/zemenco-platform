@@ -9,9 +9,18 @@ export async function callAgent(prompt: string, model: string = 'llama3.1:70b') 
     throw new Error(`Agent call failed: ${res.statusText}`)
   }
 
-  // Handle both standard JSON and potential stream responses (simplified for now)
   const data = await res.json()
-  return data
+  const content = data.content || ''
+  
+  try {
+    // If it looks like JSON, try to parse it
+    if (content.trim().startsWith('{') || content.trim().startsWith('[')) {
+      return JSON.parse(content)
+    }
+    return content
+  } catch (e) {
+    return content
+  }
 }
 
 export const AGENT_MODELS = {
