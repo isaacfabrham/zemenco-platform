@@ -13,6 +13,7 @@
     "check": "tsc --noEmit && next lint && next build"
   },
   "dependencies": {
+    "@supabase/auth-helpers-nextjs": "^0.15.0",
     "@supabase/ssr": "^0.3.0",
     "@supabase/supabase-js": "^2.43.4",
     "bullmq": "^5.76.4",

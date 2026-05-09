@@ -1,34 +1,20 @@
-import { NextResponse } from 'next/server'
-import { createClient } from '@/utils/supabase/server'
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
   const next = searchParams.get('next') ?? '/dashboard'
-  
-  // Detect locale from referer or default to en
-  const referer = request.headers.get('referer')
-  const localeMatch = referer?.match(/\/(en|am|ti|ar)(\/|$)/)
-  const locale = localeMatch ? localeMatch[1] : 'en'
 
   if (code) {
-    const supabase = createClient()
+    const cookieStore = cookies()
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
     const { error } = await supabase.auth.exchangeCodeForSession(code)
-    
     if (!error) {
-      const cookieStore = cookies()
-      const plan = cookieStore.get('selected_plan')?.value
-      
-      if (plan) {
-        return NextResponse.redirect(`${origin}/${locale}/checkout?plan=${plan}`)
-      }
-      
-      const finalRedirect = next.startsWith('/') ? `${origin}/${locale}${next === '/' ? '/dashboard' : next}` : `${origin}/${locale}/dashboard`
-      return NextResponse.redirect(finalRedirect)
+      return NextResponse.redirect(`${origin}${next}`)
     }
   }
 
-  // return the user to an error page with instructions
-  return NextResponse.redirect(`${origin}/${locale}/login?error=Could not authenticate user`)
+  return NextResponse.redirect(`${origin}/login?error=auth_failed`)
 }

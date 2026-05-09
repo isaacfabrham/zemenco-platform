@@ -1,5 +1,6 @@
 import createMiddleware from 'next-intl/middleware'
 import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@supabase/supabase-js'
 
 const intlMiddleware = createMiddleware({
   locales: ['en', 'am', 'ti', 'ar'],
@@ -10,29 +11,24 @@ const intlMiddleware = createMiddleware({
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Skip middleware for API routes and static files
   if (
     pathname.startsWith('/api') ||
     pathname.startsWith('/_next') ||
     pathname.startsWith('/auth/callback') ||
-    pathname.includes('.') 
+    pathname.includes('.')
   ) {
     return NextResponse.next()
   }
 
-  // Only protect dashboard and build routes + new Canva/Shopify routes
-  const protectedRoutes = ['/dashboard', '/build', '/admin', '/templates', '/my-site', '/settings']
+  const protectedRoutes = ['/dashboard', '/build', '/my-site', '/settings', '/templates']
   const isProtected = protectedRoutes.some(route => pathname.includes(route))
 
   if (isProtected) {
-    const cookies = request.cookies
-    const hasSession = cookies.has('sb-access-token') || 
-                       cookies.has('supabase-auth-token') ||
-                       cookies.getAll().some(c => c.name.includes('supabase'))
+    const hasSession = request.cookies.getAll().some(c =>
+      c.name.includes('supabase') || c.name.includes('sb-')
+    )
     if (!hasSession) {
-      const loginUrl = new URL('/login', request.url)
-      loginUrl.searchParams.set('redirect', pathname)
-      return NextResponse.redirect(loginUrl)
+      return NextResponse.redirect(new URL('/login', request.url))
     }
   }
 

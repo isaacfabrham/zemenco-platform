@@ -52,21 +52,20 @@ export default function Chatbot() {
     setShowQuickReplies(false)
 
     try {
-      const response = await fetch('/api/claude', {
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           messages: [...messages, userMessage].map(m => ({
             role: m.role,
             content: m.content
-          })),
-          locale
+          }))
         })
       })
 
       const data = await response.json()
-      if (data.result) {
-        setMessages(prev => [...prev, { role: 'assistant', content: data.result.text }])
+      if (data.message) {
+        setMessages(prev => [...prev, { role: 'assistant', content: data.message }])
       } else {
         const errorMsg = data.error || 'Sorry, I encountered an error. Please try again.'
         setMessages(prev => [...prev, { role: 'assistant', content: errorMsg }])
