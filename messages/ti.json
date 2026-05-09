@@ -105,11 +105,23 @@
     "signup": {
       "title": "መለያኹም ፍጠሩ",
       "subtitle": "ናይ ገዛእ ርእስኹም መድረኽ ንምህናጽ ጀምሩ",
+      "tagline": "Deep Roots. Limitless Growth.",
+      "firstName": "ስም",
+      "lastName": "ዓዲ",
+      "industry": "ዓይነት ስራሕ",
+      "email": "ኢሜይል",
+      "password": "መሕለፊ ቓል",
+      "industryPlaceholder": "ዓይነት ስራሕኩም ምረጹ",
       "button": "ተመዝገቡ",
       "creating": "ይፈጥር ኣሎ...",
       "haveAccount": "ድሮ መለያ ኣለኩም?",
       "login": "እተዉ",
-      "success": "መለያ ተፈጢሩ ኣሎ! መለያኹም ንምርግጋጽ በጃኹም {email} ርኣዩ።"
+      "success": "መለያ ተፈጢሩ ኣሎ! መለያኹም ንምርግጋጽ በጃኹም {email} ርኣዩ።",
+      "industries": {
+        "restaurant": "ቤት መግቢ",
+        "salon": "ሳሎን",
+        "dealership": "መሸጣ መካይን"
+      }
     }
   },
   "dashboard": {

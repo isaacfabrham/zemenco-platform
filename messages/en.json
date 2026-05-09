@@ -118,6 +118,8 @@
       "firstName": "First Name",
       "lastName": "Last Name",
       "industry": "Industry",
+      "email": "Email Address",
+      "password": "Password",
       "industryPlaceholder": "Select your industry",
       "button": "Sign Up",
       "creating": "Creating account...",

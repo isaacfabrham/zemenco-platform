@@ -105,11 +105,23 @@
     "signup": {
       "title": "أنشئ حسابك",
       "subtitle": "ابدأ في بناء منصتك الخاصة",
+      "tagline": "Deep Roots. Limitless Growth.",
+      "firstName": "الاسم الأول",
+      "lastName": "اسم العائلة",
+      "industry": "المجال",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "industryPlaceholder": "اختر مجالك",
       "button": "إنشاء الحساب",
       "creating": "جاري الإنشاء...",
       "haveAccount": "لديك حساب بالفعل؟",
       "login": "تسجيل الدخول",
-      "success": "تم إنشاء الحساب! يرجى التحقق من {email} لتفعيل حسابك."
+      "success": "تم إنشاء الحساب! يرجى التحقق من {email} لتفعيل حسابك.",
+      "industries": {
+        "restaurant": "مطعم",
+        "salon": "صالون",
+        "dealership": "معرض سيارات"
+      }
     }
   },
   "dashboard": {

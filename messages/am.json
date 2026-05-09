@@ -105,11 +105,23 @@
     "signup": {
       "title": "መለያዎን ይፍጠሩ",
       "subtitle": "የራስዎን መድረክ መገንባት ይጀምሩ",
+      "tagline": "Deep Roots. Limitless Growth.",
+      "firstName": "የመጀመሪያ ስም",
+      "lastName": "የአባት ስም",
+      "industry": "የስራ ዘርፍ",
+      "email": "ኢሜይል",
+      "password": "የይለፍ ቃል",
+      "industryPlaceholder": "የስራ ዘርፍዎን ይምረጡ",
       "button": "ይመዝገቡ",
       "creating": "በመፍጠር ላይ...",
       "haveAccount": "ቀድሞውኑ መለያ አለዎት?",
       "login": "ይግቡ",
-      "success": "መለያ ተፈጥሯል! እባክዎን መለያዎን ለማረጋገጥ {email}ን ያረጋግጡ።"
+      "success": "መለያ ተፈጥሯል! እባክዎን መለያዎን ለማረጋገጥ {email}ን ያረጋግጡ።",
+      "industries": {
+        "restaurant": "ሬስቶራንት",
+        "salon": "ሳሎን",
+        "dealership": "የመኪና መሸጫ"
+      }
     }
   },
   "dashboard": {
